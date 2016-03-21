@@ -17,7 +17,7 @@
     // Settings =============================================
 
     define("MAX_DEVICES", 20);
-    define("CONFIG_DIR", "./");
+    define("CONFIG_DIR", "dvr/");
     define("CONFIG_FILE", CONFIG_DIR . "dvr.conf");
     define("LOG_DIR", "/var/log/dvr/");
     define("LOG_FILE", LOG_DIR . "dvr.log");
@@ -25,7 +25,7 @@
     // create config file
     if (!file_exists(CONFIG_DIR)) {
         if (!mkdir(CONFIG_DIR))
-            trigger_error("Can not create " . CONFIG_FILE, E_USER_ERROR);
+            trigger_error("Can not create " . CONFIG_DIR, E_USER_ERROR);
         chmod(CONFIG_DIR, 0774);
     }
     if (!file_exists(CONFIG_FILE)) {
@@ -39,7 +39,7 @@
     //$user = $_SERVER["REMOTE_USER"];
     $user = "adrien";
 
-    // Check device
+    // check device
     if (!isset($_GET["hostname"])) {
         echo "notfqdn";
         return;
@@ -56,7 +56,7 @@
         return;
     }
     $ip = $_GET["myip"];
-    if (!preg_match("/^([0-9]{1,3}\\.){0,3}[0-9]{1,3}\$/", $ip)) {
+    if (!preg_match("/^[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}\$/", $ip)) {
         echo "notfqip";
         return;
     }
