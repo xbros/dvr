@@ -45,7 +45,7 @@
         return;
     }
     $device = $_GET["hostname"];
-    if (!preg_match('/^[A-Za-z]{1}[a-zA-Z0-9_\\-\\.]{3,}\$/', $device)) {
+    if (!preg_match("/^[A-Za-z]{1}[a-zA-Z0-9_\\-\\.]{3,}\$/", $device)) {
         echo "notfqdn";
         return;
     }
@@ -56,7 +56,7 @@
         return;
     }
     $ip = $_GET["myip"];
-    if (!preg_match('/^([0-9]{1,3}\\.){0,3}[0-9]{1,3}\$/', $ip)) {
+    if (!preg_match("/^([0-9]{1,3}\\.){0,3}[0-9]{1,3}\$/", $ip)) {
         echo "notfqip";
         return;
     }
@@ -84,7 +84,7 @@
             echo "nochg " . $ip;
             return;
         }          
-        $routes->set_ip($row, $ip)
+        $routes->set_ip($row, $ip);
         echo "good" . $ip;
     }
         
