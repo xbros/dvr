@@ -16,7 +16,7 @@
     define("DATA_FILE", "dvr.conf");
     define("LOG_FILE", "dvr.log");
 
-    if (!file_exists(DATA_FILE) || !touch(DATA_FILE))
+    if (!file_exists(DATA_FILE) && !touch(DATA_FILE))
         error_log("Can not create " . DATA_FILE);
 
     //$user = $_SERVER["REMOTE_USER"];
