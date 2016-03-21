@@ -17,7 +17,7 @@
     // Settings =============================================
 
     define("MAX_DEVICES", 20);
-    define("CONFIG_DIR", ".");
+    define("CONFIG_DIR", "./");
     define("CONFIG_FILE", CONFIG_DIR . "dvr.conf");
     define("LOG_DIR", "/var/log/dvr/");
     define("LOG_FILE", LOG_DIR . "dvr.log");
