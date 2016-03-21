@@ -14,7 +14,7 @@
     require('Routes.php');
 
 
-    define("CONFIG_DIR", "/etc/dvr/");
+    define("CONFIG_DIR", "dvr/");
     define("LOG_DIR", "/var/log/dvr/");
 
     define("CONFIG_FILE", CONFIG_DIR . "dvr.conf");
