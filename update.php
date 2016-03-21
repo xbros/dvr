@@ -74,7 +74,7 @@
         // add device
         if ($routes->ndevices($user)>=MAX_DEVICES) {
             echo "numhost";
-            return
+            return;
         }
         $routes->add($user, $device, $ip);
         echo "good" . $ip;
