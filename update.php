@@ -20,12 +20,10 @@
     define("CONFIG_FILE", CONFIG_DIR . "dvr.conf");
     define("LOG_FILE", LOG_DIR . "dvr.log");
 
-    if (!file_exists(CONFIG_DIR)) {
-        $oldmask = umask(0);  // helpful when used in linux server  
+    if (!file_exists(CONFIG_DIR))
         mkdir (CONFIG_DIR, 0744);
-    }
     if (!file_exists(CONFIG_FILE) && !touch(CONFIG_FILE))
-        trigger_error("Can not create " . CONFIG_FILE);
+        trigger_error("Can not create " . CONFIG_FILE, E_USER_ERROR);
 
     //$user = $_SERVER["REMOTE_USER"];
     $user = "adrien";
