@@ -19,12 +19,14 @@
     define("LOG_FILE", LOG_DIR . "dvr.log");
 
     //if (!file_exists(CONFIG_DIR))
-
     unlink(CONFIG_FILE);
     rmdir(CONFIG_DIR);
         mkdir(CONFIG_DIR, 0774);
-    if (!file_exists(CONFIG_FILE) && !touch(CONFIG_FILE))
-        trigger_error("Can not create " . CONFIG_FILE, E_USER_ERROR);
+    if (!file_exists(CONFIG_FILE)) {
+        if (!touch(CONFIG_FILE))
+            trigger_error("Can not create " . CONFIG_FILE, E_USER_ERROR);
+        chmod(CONFIG_FILE, 0774);
+    }
 
     //$user = $_SERVER["REMOTE_USER"];
     $user = "adrien";
