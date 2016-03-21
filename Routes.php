@@ -50,6 +50,15 @@ class Routes {
         return $row;
     }
 
+    public function ndevices($user) {
+        $n = 0;
+        for ($i=0; $i<count($this->users); $i++) {
+            if ($this->users[$i] == $user)
+                $n++;
+        }
+        return $n;
+    }
+
     public function add($user, $device, $ip) {
         array_push($this->users, $user);
         array_push($this->devices, $device);
@@ -57,9 +66,12 @@ class Routes {
         return $this;
     }
 
+    public function get_ip($row, $ip) {
+        return $this->ips[$row];
+    }
+
     public function set_ip($row, $ip) {
         $this->ips[$row] = $ip;
-        return $this;
     }
 }
 ?>
