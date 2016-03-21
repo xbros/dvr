@@ -8,7 +8,7 @@ class Routes {
         $fh = fopen($file, "r");
         
         if ($fh == false)
-            throw new Exception("unable to open " . $file);
+            throw new Exception("Unable to open " . $file);
 
         $row = 1;
         while (!feof($fh)) {
@@ -29,7 +29,7 @@ class Routes {
         $fh = fopen($file, "w");
 
         if ($fh == false)
-            throw new Exception("unable to open " . $file);
+            throw new Exception("Unable to open " . $file);
 
         for ($i=0; $i<count($this->users); $i++) {
             fputcsv($fh, array($this->users[i], $this->devices[i], $this->ips[i]), " ");
