@@ -39,27 +39,31 @@
     //$user = $_SERVER["REMOTE_USER"];
     $user = "adrien";
 
-    // check device
-    if (!isset($_GET["hostname"])) {
-        echo "notfqdn";
-        return;
+    // check argument keys are allowed
+    $allowed = array("hostname", "myip", "wildcard", "mx", "backmx", "offline", "system", "url");
+    foreach(array_keys($_GET) as $key) {
+        if (!in_array($_GET[$key], $allowed)) {
+            echo "abuse";
+            return;
+        }
     }
-    $device = $_GET["hostname"];
-    if (!preg_match("/^[A-Za-z]{1}[a-zA-Z0-9_\\-\\.]{3,}\$/", $device)) {
+
+    // check device
+    if (empty($_GET["hostname"]) ||
+        !preg_match("/^[A-Za-z]{1}[a-zA-Z0-9_\\-\\.]{3,}\$/", $_GET["hostname"])) {
         echo "notfqdn";
         return;
     }
 
-    // check ip
-    if (!isset($_GET["myip"])) {
-        echo "notfqip";
-        return;
-    }
-    $ip = $_GET["myip"];
-    if (!preg_match("/^[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}\$/", $ip)) {
-        echo "notfqip";
-        return;
-    }
+    // get ip
+    if (!empty($_GET["myip"]))
+        $ip = filter_var($_GET["myip"], FILTER_VALIDATE_IP);
+    if ($ip == false && !empty($_SERVER['HTTP_CLIENT_IP']))
+        $ip = filter_var($_SERVER['HTTP_CLIENT_IP'], FILTER_VALIDATE_IP);
+    if ($ip == false && !empty($_SERVER['HTTP_X_FORWARDED_FOR']))
+        $ip = filter_var($_SERVER['HTTP_X_FORWARDED_FOR'], FILTER_VALIDATE_IP);
+    if ($ip == false)
+        $ip = $_SERVER['REMOTE_ADDR'];
 
     // Update =============================================
 
@@ -77,7 +81,7 @@
             return;
         }
         $routes->add($user, $device, $ip);
-        echo "good" . $ip;
+        echo "good " . $ip;
     } else {
         // change ip
         if ($routes->get_ip($row) == $ip) {
@@ -85,7 +89,7 @@
             return;
         }          
         $routes->set_ip($row, $ip);
-        echo "good" . $ip;
+        echo "good " . $ip;
     }
         
     // write config file
