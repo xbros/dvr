@@ -66,7 +66,7 @@ class Routes {
         return $this;
     }
 
-    public function get_ip($row, $ip) {
+    public function get_ip($row) {
         return $this->ips[$row];
     }
 
