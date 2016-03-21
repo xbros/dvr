@@ -74,7 +74,7 @@ class Routes {
                 array_push($ips, $this->ips[$i]);
             }
         }
-        return array("devices"=>$devices "ips"=>$ips);
+        return array("devices"=>$devices, "ips"=>$ips);
     }
 
     public function add($user, $device, $ip) {
