@@ -13,18 +13,26 @@
 
     require('Routes.php');
 
-    define("DATA_FILE", "/etc/dvr.conf");
-    define("LOG_FILE", "dvr.log");
 
-    if (!file_exists(DATA_FILE) && !touch(DATA_FILE))
-        error_log("Can not create " . DATA_FILE);
+    define("CONFIG_DIR", "/etc/dvr/");
+    define("LOG_DIR", "/var/log/dvr/");
+
+    define("CONFIG_FILE", CONFIG_DIR . "dvr.conf");
+    define("LOG_FILE", LOG_DIR . "dvr.log");
+
+    if (!file_exists(CONFIG_DIR)) {
+        $oldmask = umask(0);  // helpful when used in linux server  
+        mkdir (CONFIG_DIR, 0744);
+    }
+    if (!file_exists(CONFIG_FILE) && !touch(CONFIG_FILE))
+        trigger_error("Can not create " . CONFIG_FILE);
 
     //$user = $_SERVER["REMOTE_USER"];
     $user = "adrien";
     $device = $_GET["hostname"];
     $ip = $_GET["myip"];
 
-    $routes = new Routes(DATA_FILE);
+    $routes = new Routes(CONFIG_FILE);
     $row = $routes->find($user, $device);
 
     if ($row === false)
@@ -32,7 +40,7 @@
     else
         $routes->set_ip($row, $ip);
 
-    $routes->write(DATA_FILE);
+    $routes->write(CONFIG_FILE);
     ?>
 </body>
 
