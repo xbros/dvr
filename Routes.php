@@ -50,6 +50,12 @@ class Routes {
         return $row;
     }
 
+    public function delete($row) {
+        unset($this->users[$row]);
+        unset($this->devices[$row]);
+        unset($this->ips[$row]);
+    }
+
     public function ndevices($user) {
         $n = 0;
         for ($i=0; $i<count($this->users); $i++) {
@@ -57,6 +63,18 @@ class Routes {
                 $n++;
         }
         return $n;
+    }
+
+    public function get_devices($user) {
+        $devices = array();
+        $ips = array();
+        for ($i=0; $i<count($this->users); $i++) {
+            if ($this->users[$i] == $user) {
+                array_push($devices, $this->devices[$i]);
+                array_push($ips, $this->ips[$i]);
+            }
+        }
+        return array("devices"=>$devices "ips"=>$ips);
     }
 
     public function add($user, $device, $ip) {

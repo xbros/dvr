@@ -36,8 +36,9 @@
 
     // Arguments =============================================
 
-    //$user = $_SERVER["REMOTE_USER"];
     $user = "adrien";
+    if (!empty($_SERVER["REMOTE_USER"]))
+        $user = $_SERVER["REMOTE_USER"];    
 
     // check argument keys are allowed
     $allowed = array("hostname", "myip", "wildcard", "mx", "backmx", "offline", "system", "url");
@@ -66,6 +67,17 @@
     if ($ip == false)
         $ip = $_SERVER['REMOTE_ADDR'];
 
+    // check offline
+    $offline = false;
+    if (!empty($_GET["offline"])) {
+        if (!in_array($_GET["offline"], array("YES", "NOCHG"))) {
+            echo "abuse";
+            return;
+        }
+        if ($_GET["offline"] == "YES")
+            $offline = true;
+    }
+
     // Update =============================================
 
     // read config file
@@ -73,6 +85,17 @@
 
     // find device
     $row = $routes->find($user, $device);
+
+    if ($offline) {
+        // delete device
+        if ($row === false) {
+            echo "nochg";
+            return;
+        } else {
+            $routes->delete($row);
+            echo "good " . $device . " offline";
+        }
+    }
 
     // update routes
     if ($row === false) {
