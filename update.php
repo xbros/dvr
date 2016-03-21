@@ -56,6 +56,7 @@
     }
 
     // get ip
+    $ip = false;
     if (!empty($_GET["myip"]))
         $ip = filter_var($_GET["myip"], FILTER_VALIDATE_IP);
     if ($ip == false && !empty($_SERVER['HTTP_CLIENT_IP']))
