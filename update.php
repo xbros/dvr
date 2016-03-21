@@ -13,7 +13,7 @@
 
     require('Routes.php');
 
-    define("DATA_FILE", "dvr.conf");
+    define("DATA_FILE", "/etc/dvr.conf");
     define("LOG_FILE", "dvr.log");
 
     if (!file_exists(DATA_FILE) && !touch(DATA_FILE))
