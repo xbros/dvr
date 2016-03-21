@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
 </head>
 
-
 <body>
     <?php
     ini_set('display_errors', 1);
@@ -13,15 +12,14 @@
 
     require('Routes.php');
 
-
     define("CONFIG_DIR", "dvr/");
     define("LOG_DIR", "/var/log/dvr/");
 
     define("CONFIG_FILE", CONFIG_DIR . "dvr.conf");
     define("LOG_FILE", LOG_DIR . "dvr.log");
 
-    if (!file_exists(CONFIG_DIR))
-        mkdir(CONFIG_DIR, 0744);
+    //if (!file_exists(CONFIG_DIR))
+        mkdir(CONFIG_DIR, 0774);
     if (!file_exists(CONFIG_FILE) && !touch(CONFIG_FILE))
         trigger_error("Can not create " . CONFIG_FILE, E_USER_ERROR);
 
