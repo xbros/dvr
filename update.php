@@ -20,8 +20,8 @@
 
     //if (!file_exists(CONFIG_DIR))
 
-    unlink(CONFIG_FILE)
-    rmdir(CONFIG_DIR)
+    unlink(CONFIG_FILE);
+    rmdir(CONFIG_DIR);
         mkdir(CONFIG_DIR, 0774);
     if (!file_exists(CONFIG_FILE) && !touch(CONFIG_FILE))
         trigger_error("Can not create " . CONFIG_FILE, E_USER_ERROR);
