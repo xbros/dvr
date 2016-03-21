@@ -42,7 +42,7 @@
     // check argument keys are allowed
     $allowed = array("hostname", "myip", "wildcard", "mx", "backmx", "offline", "system", "url");
     foreach(array_keys($_GET) as $key) {
-        if (!in_array($_GET[$key], $allowed)) {
+        if (!in_array($key, $allowed)) {
             echo "abuse";
             return;
         }
