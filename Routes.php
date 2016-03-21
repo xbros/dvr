@@ -32,7 +32,7 @@ class Routes {
             throw new Exception("Unable to open " . $file);
 
         for ($i=0; $i<count($this->users); $i++) {
-            fputcsv($fh, array($this->users[i], $this->devices[i], $this->ips[i]), " ");
+            fputcsv($fh, array($this->users[$i], $this->devices[$i], $this->ips[$i]), " ");
         }
 
         fclose($fh);
@@ -42,7 +42,7 @@ class Routes {
     public function find($user, $device) {
         $row = false;
         for ($i=0; $i<count($this->users); $i++) {
-            if ($this->users[i] == $user && $this->devices[i] == $device) {
+            if ($this->users[$i] == $user && $this->devices[$i] == $device) {
                 $row = $i;
                 break;
             }

@@ -21,7 +21,7 @@
     define("LOG_FILE", LOG_DIR . "dvr.log");
 
     if (!file_exists(CONFIG_DIR))
-        mkdir (CONFIG_DIR, 0744);
+        mkdir(CONFIG_DIR, 0744);
     if (!file_exists(CONFIG_FILE) && !touch(CONFIG_FILE))
         trigger_error("Can not create " . CONFIG_FILE, E_USER_ERROR);
 
