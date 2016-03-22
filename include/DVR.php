@@ -165,7 +165,7 @@ class DVR {
 	public static function openLog($log_path = DVR_LOG_PATH) {
     	// open log file and create if necessary
 	    $ok = createFile($log_path);
-	    self::$LOG_HANDLE = fopen($log_path, "a"));
+	    self::$LOG_HANDLE = fopen($log_path, "a");
 	    if ($ok) {    	
 			fprintf(self::$LOG_HANDLE, "#Software: dvr %s".PHP_EOL, self::VERSION);
 			fprintf(self::$LOG_HANDLE, "#Start-Date: %s".PHP_EOL, strftime("%d/%b/%Y:%H:%M:%S %z"));
@@ -194,7 +194,7 @@ class DVRException extends Exception {
     	$this->returnCode = $code;
         parent::__construct($message, 0, $previous);
     }
-    
+
     public function getReturnCode() {
     	return $this->returnCode;
     }
