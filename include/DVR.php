@@ -189,7 +189,7 @@ class DVRException extends Exception {
 	private $returnCode;
     public function __construct($message, $code, Exception $previous = null) {
     	$this->returnCode = $code;
-        parent::__construct("DeviceTable exception: ".$message, 0, $previous);
+        parent::__construct($message, 0, $previous);
     }
     public function getReturnCode() {
     	return $this->returnCode;
