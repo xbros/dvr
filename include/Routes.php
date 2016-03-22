@@ -1,4 +1,5 @@
 <?php
+
 class Routes {
     private $users = array();
     private $devices = array();
@@ -92,4 +93,5 @@ class Routes {
         $this->ips[$row] = $ip;
     }
 }
+
 ?>

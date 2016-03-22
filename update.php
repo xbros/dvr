@@ -11,12 +11,12 @@
     ini_set('display_startup_errors', 1);
     error_reporting(E_ALL);
 
-    // include class Routes
-    require('Routes.php');
+    // include files
+    require('include/Routes.php');
 
-    require('settings.php');
+    require('include/settings.php');
 
-    require('script.php');
+    require('include/script.php');
 
     ?>
 
