@@ -36,9 +36,8 @@
     $devices = routes->get_devices($user);
 
     // display devices
-    for ($i=0; i<count($devices->devices): $i++) {
+    for ($i=0; i<count($devices->devices); $i++)
         echo $devices->devices[i] . " " . $devices->ips[i] . "\n";
-    }
 
     ?>
 </body>
