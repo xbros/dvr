@@ -15,12 +15,10 @@
     require('include/settings.php');
     require('include/DVR.php');
 
-    var_dump($_SERVER["REMOTE_USER"]);
     // get user
+    define("DVR_USER", "anonymous");    
     if (!empty($_SERVER["REMOTE_USER"]))
         define("DVR_USER", $_SERVER["REMOTE_USER"]);
-    else
-        define("DVR_USER", "anonymous");
 
     // open log file and create if necessary
     $ok = createFile(DVR_LOG_PATH);
