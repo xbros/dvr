@@ -22,13 +22,13 @@
         // most other servers
         if (strpos(strtolower($_SERVER['HTTP_AUTHORIZATION']), 'basic')===0)
             list($user, $pass) = explode(':',base64_decode(substr($_SERVER['HTTP_AUTHORIZATION'], 6)));
-    } else {
-        // if (is_null($user) || !in_array($user, array_keys($passwords)) || ($pass !== $passwords[$user])) {
-            header('WWW-Authenticate: Basic realm="Authentication Required"');
-            header('HTTP/1.0 401 Unauthorized');
-            echo "badauth";
-            die();
-        // }
+    }
+
+    if (is_null($user) || !in_array($user, array_keys($passwords)) || ($pass !== $passwords[$user])) {
+        header('WWW-Authenticate: Basic realm="Authentication Required"');
+        header('HTTP/1.0 401 Unauthorized');
+        echo "badauth";
+        die();
     }
 
     var_dump($user);
