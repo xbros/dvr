@@ -15,8 +15,6 @@
     require('include/settings.php');
     require('include/DVR.php');
 
-    define('DVR_SCRIPT_PATH', realpath(__FILE__));
-
     try {
         $dvr = new DVR();
         $dvr->updateTable();
