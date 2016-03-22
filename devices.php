@@ -15,26 +15,18 @@
     require('include/settings.php');
     require('include/DVR.php');
 
-    // get user
-    define("DVR_USER", "anonymous");    
-    if (!empty($_SERVER["REMOTE_USER"]))
-        define("DVR_USER", $_SERVER["REMOTE_USER"]);
-
-    // open log file and create if necessary
-    $ok = createFile(DVR_LOG_PATH);
-    define("DVR_LOG_HANDLE", fopen(DVR_LOG_PATH, "a"));
-    if ($ok)
-        DVR::logHeader();
-
     try {
         $dvr = new DVR();
         $dvr->printDevices();
     } catch (DVRException $e) {
         DVR::returnCode($e->getReturnCode());
         DVR::log($e->getMessage());
+    } catch (Exception $e) {
+        DVR::returnCode("911");
+        DVR::log("generic exception: ".$e->getMessage());
+    } finally {
+        DVR::closeLog();
     }
-
-    fclose(DVR_LOG_HANDLE);
     ?>
 </body>
 </html>
