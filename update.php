@@ -95,10 +95,7 @@
             $routes->delete($row);
             echo "good " . $device . " offline";
         }
-    }
-
-    // update routes
-    if ($row === false) {
+    } elseif ($row === false) {
         // add device
         if ($routes->ndevices($user)>=MAX_DEVICES) {
             echo "numhost";
