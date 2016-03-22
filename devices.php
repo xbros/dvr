@@ -33,7 +33,7 @@
 
     // display devices
     for ($i=0; $i<count($devices["devices"]); $i++)
-        echo $devices["devices"][$i] . " " . $devices["ips"][$i] . "\\n";
+        echo $devices["devices"][$i] . " " . $devices["ips"][$i] . " <br>";
 
     ?>
 </body>
