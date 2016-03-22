@@ -52,9 +52,9 @@ class Routes {
     }
 
     public function delete($row) {
-        unset($this->users[$row]);
-        unset($this->devices[$row]);
-        unset($this->ips[$row]);
+        array_splice($this->users, $row, 1);
+        array_splice($this->devices, $row, 1);
+        array_splice($this->ips, $row, 1);
     }
 
     public function ndevices($user) {
