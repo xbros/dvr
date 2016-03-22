@@ -14,12 +14,7 @@
     // include class Routes
     require('Routes.php');
 
-    // Settings =============================================
-
-    define("CONFIG_DIR", "./");
-    define("CONFIG_FILE", CONFIG_DIR . "dvr.conf");
-    define("LOG_DIR", "/var/log/dvr/");
-    define("LOG_FILE", LOG_DIR . "dvr.log");
+    require('settings.php');
 
     // Arguments =============================================
 
@@ -37,7 +32,7 @@
 
     // display devices
     for ($i=0; $i<count($devices["devices"]); $i++)
-        echo "adrien" . $devices["devices"][$i] . " " . $devices["ips"][$i] . "\n";
+        echo $devices["devices"][$i] . " " . $devices["ips"][$i] . "\n";
 
     ?>
 </body>
