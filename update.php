@@ -14,6 +14,7 @@
     $passwords = array("adrien"=>"pass", "simon"=>"pass");
     $headers = getallheaders();
     var_dump($headers);
+    var_dump($_SERVER);
 
     if (isset($_SERVER['PHP_AUTH_USER'])) {
         // mod_php
