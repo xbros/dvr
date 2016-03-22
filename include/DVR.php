@@ -70,7 +70,41 @@ class DVR {
 		}
 	}
 
-	public function updateTable($vars) {
+	private function parseRequest($vars) {
+		if (empty($var))
+			$vars = self::requestVars();
+
+		// check parameter keys are allowed
+		foreach(array_keys($vars) as $key) {
+		    if (!in_array($key, self::$ALLOWED_KEYS))
+		    	throw new DVRException("ignore request. invalid parameter key: ".$key, "abuse");
+		}
+
+		// get ip
+		if (!empty($vars["myip"]))
+		    $this->ip = filter_var($vars["myip"], FILTER_VALIDATE_IP);
+		if (!$this->ip && !empty($_SERVER['HTTP_CLIENT_IP']))
+		    $this->ip = filter_var($_SERVER['HTTP_CLIENT_IP'], FILTER_VALIDATE_IP);
+		if (!$this->ip && !empty($_SERVER['HTTP_X_FORWARDED_FOR']))
+		    $this->ip = filter_var($_SERVER['HTTP_X_FORWARDED_FOR'], FILTER_VALIDATE_IP);
+		if (!$this->ip)
+		    $this->ip = $_SERVER['REMOTE_ADDR'];
+
+		// check device
+		if (empty($vars["hostname"]) || !preg_match("/^[A-Za-z]{1}[a-zA-Z0-9_\\-\\.]{2,}\$/", $vars["hostname"]))
+		    throw new DVRException("ignore request. invalid hostname value: ".$vars["hostname"], "notfqdn");
+		$this->device = $vars["hostname"];
+
+		// check delete
+		if (!empty($vars["offline"])) {
+		    if (!in_array($vars["offline"], array("YES", "NOCHG")))
+		    	throw new DVRException("ignore request. invalid offline value: ".$vars["offline"], "abuse");
+		    if ($vars["offline"] == "YES")
+		        $this->delete = true;
+		}
+	}
+	
+	public function updateTable($vars = null) {
 		parseRequest($vars);
 
 		try {
@@ -130,40 +164,6 @@ class DVR {
 				throw new DVRException("Unsupported request method: ".$_SERVER['REQUEST_METHOD'].". use GET or POST", "abuse");
 		}
 		return $vars;
-	}
-
-	private function parseRequest($vars) {
-		if (empty($var))
-			$vars = self::requestVars();
-
-		// check parameter keys are allowed
-		foreach(array_keys($vars) as $key) {
-		    if (!in_array($key, self::$ALLOWED_KEYS))
-		    	throw new DVRException("ignore request. invalid parameter key: ".$key, "abuse");
-		}
-
-		// get ip
-		if (!empty($vars["myip"]))
-		    $this->ip = filter_var($vars["myip"], FILTER_VALIDATE_IP);
-		if (!$this->ip && !empty($_SERVER['HTTP_CLIENT_IP']))
-		    $this->ip = filter_var($_SERVER['HTTP_CLIENT_IP'], FILTER_VALIDATE_IP);
-		if (!$this->ip && !empty($_SERVER['HTTP_X_FORWARDED_FOR']))
-		    $this->ip = filter_var($_SERVER['HTTP_X_FORWARDED_FOR'], FILTER_VALIDATE_IP);
-		if (!$this->ip)
-		    $this->ip = $_SERVER['REMOTE_ADDR'];
-
-		// check device
-		if (empty($vars["hostname"]) || !preg_match("/^[A-Za-z]{1}[a-zA-Z0-9_\\-\\.]{2,}\$/", $vars["hostname"]))
-		    throw new DVRException("ignore request. invalid hostname value: ".$vars["hostname"], "notfqdn");
-		$this->device = $vars["hostname"];
-
-		// check delete
-		if (!empty($vars["offline"])) {
-		    if (!in_array($vars["offline"], array("YES", "NOCHG")))
-		    	throw new DVRException("ignore request. invalid offline value: ".$vars["offline"], "abuse");
-		    if ($vars["offline"] == "YES")
-		        $this->delete = true;
-		}
 	}
 
 	public static function returnCode($returnCode) {
