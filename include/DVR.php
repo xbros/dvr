@@ -167,7 +167,7 @@ class DVR {
 	    $ok = self::createFile($log_path);
 	    self::$LOG_HANDLE = fopen($log_path, "a");
 	    if ($ok) {    	
-			fprintf(self::$LOG_HANDLE, "#Software: dvr %s".PHP_EOL, self::VERSION);
+			fprintf(self::$LOG_HANDLE, "#Software: dvr v%s".PHP_EOL, self::VERSION);
 			fprintf(self::$LOG_HANDLE, "#Start-Date: %s".PHP_EOL, strftime("%d/%b/%Y:%H:%M:%S %z"));
 			fprintf(self::$LOG_HANDLE, "#Fields: ip user [time] script \"message\"".PHP_EOL);
 	    }
