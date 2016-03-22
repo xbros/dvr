@@ -103,9 +103,9 @@ class DVR {
 		        $this->delete = true;
 		}
 	}
-	
+
 	public function updateTable($vars = null) {
-		parseRequest($vars);
+		self::parseRequest($vars);
 
 		try {
 			// read config file
