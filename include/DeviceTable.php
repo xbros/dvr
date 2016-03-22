@@ -9,7 +9,7 @@ class DeviceTable {
         $fh = fopen($file, "r");
         
         if ($fh == false)
-            throw new DTException("unable to open ".$file);
+            throw new DTException("unable to open ".realpath($file));
 
         $row = 1;
         while (!feof($fh)) {
@@ -17,7 +17,7 @@ class DeviceTable {
             if (count($fields) == 1 && empty(trim($fields[0])))
                 continue; // skip empty line
             if (count($fields) != 3)
-                throw new DTException("in file ".$file.": row ".$row." does not have 3 fields");
+                throw new DTException("in file ".realpath($file).": row ".$row." does not have 3 fields");
             array_push($this->users, $fields[0]);
             array_push($this->devices, $fields[1]);
             array_push($this->ips, $fields[2]);
@@ -30,7 +30,7 @@ class DeviceTable {
         $fh = fopen($file, "w");
 
         if ($fh == false)
-            throw new DTException("unable to open ".$file);
+            throw new DTException("unable to open ".realpath($file));
 
         for ($i=0; $i<count($this->users); $i++) {
             fputcsv($fh, array($this->users[$i], $this->devices[$i], $this->ips[$i]), " ");

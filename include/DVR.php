@@ -11,6 +11,7 @@ class DVR {
 
 	private $config_path;
 	private $max_devices;
+	private $mode;
 	private $device;
 	private $ip = false;
 	private $delete = false;
@@ -21,11 +22,10 @@ class DVR {
 
 		// check config path and create file if necessary
 		if (self::createFile($config_path))
-			self::log("create config file: ".$config_path);
+			self::log("create config file: ".realpath($config_path));
 
 		$this->config_path = $config_path;
 		$this->max_devices = $max_devices;
-
 	}
 
 	public function printDevices() {
@@ -140,16 +140,16 @@ class DVR {
 		echo $returnCode.PHP_EOL;
 	}
 
-	public static function createFile($path, $mode=0774) {
+	public static function createFile($path, $mode=DVR_MODE) {
 		if (!file_exists($path)) {
 			$dir = dirname($path);
 			if (!file_exists($dir)) {
 			    if (!mkdir($dir))
-		    		throw new Exception("unable to create dir: ".$dir);
+		    		throw new Exception("unable to create dir: ".realpath($dir));
 			    chmod($dir, $mode);
 			}
 		    if (!touch($path))
-	    		throw new Exception("unable to create file: ".$path);
+	    		throw new Exception("unable to create file: ".realpath($path));
 		    chmod($path, $mode);
 		    return true;
 		}
@@ -169,15 +169,16 @@ class DVR {
 	    if ($ok) {    	
 			fprintf(self::$LOG_HANDLE, "#Software: dvr %s".PHP_EOL, self::VERSION);
 			fprintf(self::$LOG_HANDLE, "#Start-Date: %s".PHP_EOL, strftime("%d/%b/%Y:%H:%M:%S %z"));
-			fprintf(self::$LOG_HANDLE, "#Fields: ip user [time] \"message\"".PHP_EOL);
+			fprintf(self::$LOG_HANDLE, "#Fields: ip user [time] file \"message\"".PHP_EOL);
 	    }
 	}
 
 	public static function log($message) {
-		fprintf(self::$LOG_HANDLE, "%s %s %s \"%s\"".PHP_EOL, 
+		fprintf(self::$LOG_HANDLE, "%s %s %s %s \"%s\"".PHP_EOL, 
 			$_SERVER["REMOTE_ADDR"], 
 			self::$USER, 
 			strftime("[%d/%b/%Y:%H:%M:%S %z]"), 
+			DVR_SCRIPT_PATH,
 			$message);
 	}
 
