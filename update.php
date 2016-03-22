@@ -23,17 +23,18 @@
         // most other servers
         if (strpos(strtolower($headers['Authorization']), 'basic')===0)
             list($user, $pass) = explode(':',base64_decode(substr($headers['Authorization'], 6)));
+    } else {
+        // if (is_null($user) || !in_array($user, array_keys($passwords)) || ($pass !== $passwords[$user])) {
+            header('WWW-Authenticate: Basic realm="Authentication Required"');
+            header('HTTP/1.0 401 Unauthorized');
+            echo "badauth";
+            die();
+        // }
     }
 
     var_dump($user);
     var_dump($pass);
 
-    // if (is_null($user) || !in_array($user, array_keys($passwords)) || ($pass !== $passwords[$user])) {
-    //     header('WWW-Authenticate: Basic realm="Authentication Required"');
-    //     header('HTTP/1.0 401 Unauthorized');
-    //     echo "badauth";
-    //     die();
-    // }
 
     require('include/config.php');
     require('include/DVR.php');
