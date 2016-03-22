@@ -23,6 +23,7 @@
         if (strpos(strtolower($_SERVER['HTTP_AUTHORIZATION']),'basic')===0)
             list($user, $pass) = explode(':',base64_decode(substr($_SERVER['HTTP_AUTHORIZATION'], 6)));
     }
+    var_dump(getallheaders());
     var_dump($user);
     var_dump($pass);
 
