@@ -65,6 +65,7 @@ if ($offline) {
     // add device
     if ($routes->ndevices($user)>=MAX_DEVICES) {
         echo "numhost";
+        return;
     }
     $routes->add($user, $device, $ip);
     echo "good " . $ip;
@@ -72,6 +73,7 @@ if ($offline) {
     // change ip
     if ($routes->get_ip($row) == $ip) {
         echo "nochg " . $ip;
+        return;
     }          
     $routes->set_ip($row, $ip);
     echo "good " . $ip;
