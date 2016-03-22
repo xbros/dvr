@@ -12,18 +12,16 @@
     //error_reporting(E_ALL);
 
     $passwords = array("adrien"=>"pass", "simon"=>"pass");
-    $headers = getallheaders();
-    var_dump($headers);
     var_dump($_SERVER);
 
     if (isset($_SERVER['PHP_AUTH_USER'])) {
         // mod_php
         $user = $_SERVER['PHP_AUTH_USER'];
         $pass = $_SERVER['PHP_AUTH_PW'];
-    } if (isset($headers['Authorization'])) {
+    } if (isset($_SERVER['HTTP_AUTHORIZATION'])) {
         // most other servers
-        if (strpos(strtolower($headers['Authorization']), 'basic')===0)
-            list($user, $pass) = explode(':',base64_decode(substr($headers['Authorization'], 6)));
+        if (strpos(strtolower($_SERVER['HTTP_AUTHORIZATION']), 'basic')===0)
+            list($user, $pass) = explode(':',base64_decode(substr($_SERVER['HTTP_AUTHORIZATION'], 6)));
     } else {
         // if (is_null($user) || !in_array($user, array_keys($passwords)) || ($pass !== $passwords[$user])) {
             header('WWW-Authenticate: Basic realm="Authentication Required"');
