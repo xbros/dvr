@@ -30,9 +30,10 @@
     // get devices
     $devices = routes->get_devices($user);
 
+    var_dump($devices);
     // display devices
-    for ($i=0; $i<count($devices["devices"]); $i++)
-        echo $devices["devices"][$i] . " " . $devices["ips"][$i] . "\n";
+    //for ($i=0; $i<count($devices["devices"]); $i++)
+    //    echo $devices["devices"][$i] . " " . $devices["ips"][$i] . "\n";
 
     ?>
 </body>
