@@ -17,15 +17,14 @@
         // mod_php
         $user = $_SERVER['PHP_AUTH_USER'];
         $pass = $_SERVER['PHP_AUTH_PW'];
-        var_dump($user);
-        var_dump($pass);
     } elseif (isset($_SERVER['HTTP_AUTHORIZATION'])) {
         // most other servers
         var_dump($_SERVER['HTTP_AUTHORIZATION']);
         if (strpos(strtolower($_SERVER['HTTP_AUTHORIZATION']),'basic')===0)
             list($user, $pass) = explode(':',base64_decode(substr($_SERVER['HTTP_AUTHORIZATION'], 6)));
-
     }
+    var_dump($user);
+    var_dump($pass);
 
     if (is_null($user) || !in_array($user, array_keys($passwords)) || ($pass !== $passwords[$user])) {
         header('WWW-Authenticate: Basic realm="Authentication Required"');
