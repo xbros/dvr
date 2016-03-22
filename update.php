@@ -15,6 +15,7 @@
     require('include/settings.php');
     require('include/DVR.php');
 
+    var_dump($_SERVER["REMOTE_USER"]);
     // get user
     if (!empty($_SERVER["REMOTE_USER"]))
         define("DVR_USER", $_SERVER["REMOTE_USER"]);
