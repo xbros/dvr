@@ -12,18 +12,20 @@
     //error_reporting(E_ALL);
 
     $passwords = array("adrien"=>"pass", "simon"=>"pass");
+    $headers = getallheaders();
+    var_dump($headers);
 
     if (isset($_SERVER['PHP_AUTH_USER'])) {
         // mod_php
         $user = $_SERVER['PHP_AUTH_USER'];
         $pass = $_SERVER['PHP_AUTH_PW'];
-    } elseif (isset($_SERVER['HTTP_AUTHORIZATION'])) {
+    } if (isset($headers['Authorization']) {
         // most other servers
-        var_dump($_SERVER['HTTP_AUTHORIZATION']);
-        if (strpos(strtolower($_SERVER['HTTP_AUTHORIZATION']),'basic')===0)
-            list($user, $pass) = explode(':',base64_decode(substr($_SERVER['HTTP_AUTHORIZATION'], 6)));
+        var_dump($headers['Authorization']);
+        if (strpos(strtolower($headers['Authorization']), 'basic')===0)
+            list($user, $pass) = explode(':',base64_decode(substr($headers['Authorization'], 6)));
     }
-    var_dump(getallheaders());
+    
     var_dump($user);
     var_dump($pass);
 
