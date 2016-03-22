@@ -28,12 +28,12 @@
     var_dump($user);
     var_dump($pass);
 
-    if (is_null($user) || !in_array($user, array_keys($passwords)) || ($pass !== $passwords[$user])) {
-        header('WWW-Authenticate: Basic realm="Authentication Required"');
-        header('HTTP/1.0 401 Unauthorized');
-        echo "badauth";
-        die();
-    }
+    // if (is_null($user) || !in_array($user, array_keys($passwords)) || ($pass !== $passwords[$user])) {
+    //     header('WWW-Authenticate: Basic realm="Authentication Required"');
+    //     header('HTTP/1.0 401 Unauthorized');
+    //     echo "badauth";
+    //     die();
+    // }
 
     require('include/config.php');
     require('include/DVR.php');
