@@ -96,8 +96,8 @@ class DeviceTable {
 
 
 class DTException extends Exception {
-    public function getMessage() {
-        return "DeviceTable exception: ".parent::getMessage();
+    public function __construct($message, $code = 0, Exception $previous = null) {
+        parent::__construct("DeviceTable exception: ".$message, $code, $previous);
     }
 }
 
