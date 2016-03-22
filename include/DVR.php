@@ -43,10 +43,6 @@ class DVR {
 		$this->max_devices = $max_devices;
 	}
 
-	public function __destruct() {
-		fclose($this->log_handle);
-	}
-
 	public function printDevices() {
 		try {
 		    // read config file
@@ -126,7 +122,7 @@ class DVR {
 			    }
 			} elseif ($row === false) {
 			    // add device
-			    if ($table->ndevices($user)>=$this->max_devices)
+			    if ($table->ndevices($this->user)>=$this->max_devices)
 			    	throw new DVRException("ignore add device: ".$this->device.". max number of devices reached: ".$this->max_devices, "numhost");
 			    $table->add($this->user, $this->device, $this->ip);
 		        self::log("add device: ".$this->device." ".$this->ip);
