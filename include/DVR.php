@@ -70,7 +70,7 @@ class DVR {
 		}
 	}
 
-	public function updateTable($vars = requestVars()) {
+	public function updateTable($vars = self::requestVars()) {
 		parseRequest($vars);
 
 		try {
@@ -88,7 +88,7 @@ class DVR {
 			    else {
 			        $table->delete($row);
 			        self::log("delete device: ".$device);
-			        returnCode("good delete ".$device);
+			        self::returnCode("good delete ".$device);
 			    }
 			} elseif ($row === false) {
 			    // add device
@@ -96,14 +96,14 @@ class DVR {
 			    	throw new DVRException("ignore add device: ".$device.". max number of devices reached: ".$this->max_devices, "numhost");
 			    $table->add($user, $device, $ip);
 		        self::log("add device: ".$device." ".$ip);
-			    returnCode("good ".$ip);
+			    self::returnCode("good ".$ip);
 			} else {
 			    // change ip
 			    if ($table->getIp($row) == $ip)
 			    	throw new DVRException("ignore change device: ".$device." ".$ip, "nochg ".$ip);
 			    $table->setIp($row, $ip);
 		        self::log("change device: ".$device." ".$ip);
-			    returnCode("good ".$ip);
+			    self::returnCode("good ".$ip);
 			}
 
 			// write config file
@@ -118,7 +118,7 @@ class DVR {
 		}
 	}
 
-	private function requestVars() {
+	public static function requestVars() {
 		switch ($_SERVER['REQUEST_METHOD']) {
 			case "GET":
 				$vars =& $_GET;
@@ -127,7 +127,7 @@ class DVR {
 				$vars =& $_POST;
 				break;
 			default:
-				throw new Exception("abuse");
+				throw new DVRException("Unsupported request method: ".$_SERVER['REQUEST_METHOD'].". use GET or POST", "abuse");
 		}
 		return $vars;
 	}
@@ -163,11 +163,11 @@ class DVR {
 		}
 	}
 
-	static function returnCode($returnCode) {
+	public static function returnCode($returnCode) {
 		echo $returnCode.PHP_EOL;
 	}
 
-	static function log($message) {
+	public static function log($message) {
     	if (empty(DVR_LOG_HANDLE))
     		return;
 		fprintf(DVR_LOG_HANDLE, "%s %s %s \"%s\"".PHP_EOL, 
@@ -177,7 +177,7 @@ class DVR {
 			$message);
 	}
 
-	static function logHeader() {
+	public static function logHeader() {
 		fprintf($this->log_handle, "#Software: dvr %s".PHP_EOL, self::VERSION);
 		fprintf($this->log_handle, "#Start-Date: %s".PHP_EOL, strftime("%d/%b/%Y:%H:%M:%S %z"));
 		fprintf($this->log_handle, "#Fields: ip user [time] \"message\"".PHP_EOL);
