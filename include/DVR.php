@@ -38,7 +38,7 @@ class DVR {
 
 		    // print devices
 		    for ($i=0; $i<count($devices["devices"]); $i++)
-		        echo $devices["devices"][$i]." ".$devices["ips"][$i].PHP_EOL;
+		        echo $devices["devices"][$i]." ".$devices["ips"][$i]."<br>";
 
 	        self::log("print user devices");
 		} catch (DTException $e) {
