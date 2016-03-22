@@ -16,7 +16,7 @@ foreach(array_keys($_GET) as $key) {
 }
 
 // check device
-if (empty($_GET["hostname"]) || !preg_match("/^[A-Za-z]{1}[a-zA-Z0-9_\\-\\.]{3,}\$/", $_GET["hostname"])) {
+if (empty($_GET["hostname"]) || !preg_match("/^[A-Za-z]{1}[a-zA-Z0-9_\\-\\.]{2,}\$/", $_GET["hostname"])) {
     echo "notfqdn";
     return;
 }
