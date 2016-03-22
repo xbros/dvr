@@ -70,7 +70,7 @@ class DVR {
 		}
 	}
 
-	public function updateTable($vars = self::requestVars()) {
+	public function updateTable($vars) {
 		parseRequest($vars);
 
 		try {
@@ -133,6 +133,9 @@ class DVR {
 	}
 
 	private function parseRequest($vars) {
+		if (empty($var))
+			$vars = self::requestVars();
+
 		// check parameter keys are allowed
 		foreach(array_keys($vars) as $key) {
 		    if (!in_array($key, self::$ALLOWED_KEYS))
