@@ -39,6 +39,7 @@ class DVR {
 		if (createFile($config_path))
 			self::log("create config file: ".$config_path);
 
+		$this->user = $user;
 		$this->config_path = $config_path;
 		$this->max_devices = $max_devices;
 	}
