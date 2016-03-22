@@ -25,7 +25,7 @@
     $ok = createFile(DVR_LOG_PATH);
     define("DVR_LOG_HANDLE", fopen(DVR_LOG_PATH, "a"));
     if ($ok)
-        logHeader();
+        DVR::logHeader();
 
     try {
         $dvr = new DVR();
