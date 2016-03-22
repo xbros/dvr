@@ -177,9 +177,9 @@ class DVR {
 	}
 
 	public static function logHeader() {
-		fprintf($this->log_handle, "#Software: dvr %s".PHP_EOL, self::VERSION);
-		fprintf($this->log_handle, "#Start-Date: %s".PHP_EOL, strftime("%d/%b/%Y:%H:%M:%S %z"));
-		fprintf($this->log_handle, "#Fields: ip user [time] \"message\"".PHP_EOL);
+		fprintf(DVR_LOG_HANDLE, "#Software: dvr %s".PHP_EOL, self::VERSION);
+		fprintf(DVR_LOG_HANDLE, "#Start-Date: %s".PHP_EOL, strftime("%d/%b/%Y:%H:%M:%S %z"));
+		fprintf(DVR_LOG_HANDLE, "#Fields: ip user [time] \"message\"".PHP_EOL);
 	}
 }
 
