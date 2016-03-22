@@ -19,13 +19,12 @@
         // mod_php
         $user = $_SERVER['PHP_AUTH_USER'];
         $pass = $_SERVER['PHP_AUTH_PW'];
-    } if (isset($headers['Authorization']) {
+    } if (isset($headers['Authorization'])) {
         // most other servers
-        var_dump($headers['Authorization']);
         if (strpos(strtolower($headers['Authorization']), 'basic')===0)
             list($user, $pass) = explode(':',base64_decode(substr($headers['Authorization'], 6)));
     }
-    
+
     var_dump($user);
     var_dump($pass);
 
