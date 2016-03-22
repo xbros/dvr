@@ -21,8 +21,9 @@ function createFile($path, $mode=0774) {
 
 
 class DVR {
-	const ALLOWED_KEYS = array("hostname", "myip", "wildcard", "mx", "backmx", "offline", "system", "url");
 	const VERSION = "1.0";
+
+	public static $ALLOWED_KEYS = array("hostname", "myip", "wildcard", "mx", "backmx", "offline", "system", "url");
 
 	private $config_path;
 	private $max_devices;
@@ -134,7 +135,7 @@ class DVR {
 	private function parseRequest($vars) {
 		// check parameter keys are allowed
 		foreach(array_keys($vars) as $key) {
-		    if (!in_array($key, ALLOWED_KEYS))
+		    if (!in_array($key, self::$ALLOWED_KEYS))
 		    	throw new DVRException("ignore request. invalid parameter key: ".$key, "abuse");
 		}
 
