@@ -169,7 +169,7 @@ class DVR {
 	    if ($ok) {    	
 			fprintf(self::$LOG_HANDLE, "#Software: dvr %s".PHP_EOL, self::VERSION);
 			fprintf(self::$LOG_HANDLE, "#Start-Date: %s".PHP_EOL, strftime("%d/%b/%Y:%H:%M:%S %z"));
-			fprintf(self::$LOG_HANDLE, "#Fields: ip user [time] file \"message\"".PHP_EOL);
+			fprintf(self::$LOG_HANDLE, "#Fields: ip user [time] script \"message\"".PHP_EOL);
 	    }
 	}
 
@@ -178,7 +178,7 @@ class DVR {
 			$_SERVER["REMOTE_ADDR"], 
 			self::$USER, 
 			strftime("[%d/%b/%Y:%H:%M:%S %z]"), 
-			DVR_SCRIPT_PATH,
+			$_SERVER['PHP_SELF'],
 			$message);
 	}
 
