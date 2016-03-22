@@ -20,7 +20,7 @@ class DVR {
 		self::setUser();
 
 		// check config path and create file if necessary
-		if (createFile($config_path))
+		if (self::createFile($config_path))
 			self::log("create config file: ".$config_path);
 
 		$this->config_path = $config_path;
@@ -164,7 +164,7 @@ class DVR {
 
 	public static function openLog($log_path = DVR_LOG_PATH) {
     	// open log file and create if necessary
-	    $ok = createFile($log_path);
+	    $ok = self::createFile($log_path);
 	    self::$LOG_HANDLE = fopen($log_path, "a");
 	    if ($ok) {    	
 			fprintf(self::$LOG_HANDLE, "#Software: dvr %s".PHP_EOL, self::VERSION);
