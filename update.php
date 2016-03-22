@@ -31,7 +31,7 @@
         $dvr = new DVR();
         $dvr->updateTable();
     } catch (DVRException $e) {
-        DVR::returnCode($e->getCode());
+        DVR::returnCode($e->getReturnCode());
         DVR::log($e->getMessage());
     }
 

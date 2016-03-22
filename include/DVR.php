@@ -113,31 +113,31 @@ class DVR {
 	        self::log("read config file: ".$this->config_path);
 
 			// find device
-			$row = $table->find($user, $device);
+			$row = $table->find($this->user, $this->device);
 
 			if ($this->delete) {
 			    // delete device
 			    if ($row === false)
-			    	throw new DVRException("ignore delete device: ".$device, "nochg");
+			    	throw new DVRException("ignore delete device: ".$this->device, "nochg");
 			    else {
 			        $table->delete($row);
-			        self::log("delete device: ".$device);
-			        self::returnCode("good delete ".$device);
+			        self::log("delete device: ".$this->device);
+			        self::returnCode("good delete ".$this->device);
 			    }
 			} elseif ($row === false) {
 			    // add device
 			    if ($table->ndevices($user)>=$this->max_devices)
-			    	throw new DVRException("ignore add device: ".$device.". max number of devices reached: ".$this->max_devices, "numhost");
-			    $table->add($user, $device, $ip);
-		        self::log("add device: ".$device." ".$ip);
-			    self::returnCode("good ".$ip);
+			    	throw new DVRException("ignore add device: ".$this->device.". max number of devices reached: ".$this->max_devices, "numhost");
+			    $table->add($this->user, $this->device, $this->ip);
+		        self::log("add device: ".$this->device." ".$this->ip);
+			    self::returnCode("good ".$this->ip);
 			} else {
 			    // change ip
-			    if ($table->getIp($row) == $ip)
-			    	throw new DVRException("ignore change device: ".$device." ".$ip, "nochg ".$ip);
-			    $table->setIp($row, $ip);
-		        self::log("change device: ".$device." ".$ip);
-			    self::returnCode("good ".$ip);
+			    if ($table->getIp($row) == $this->ip)
+			    	throw new DVRException("ignore change device: ".$this->device." ".$this->ip, "nochg ".$this->ip);
+			    $table->setIp($row, $this->ip);
+		        self::log("change device: ".$this->device." ".$this->ip);
+			    self::returnCode("good ".$ithis->p);
 			}
 
 			// write config file
@@ -189,7 +189,14 @@ class DVR {
 
 
 class DVRException extends Exception {
-
+	private $returnCode;
+    public function __construct($message, $code, Exception $previous = null) {
+    	$this->returnCode = $code;
+        parent::__construct("DeviceTable exception: ".$message, 0, $previous);
+    }
+    public function getReturnCode() {
+    	return $this->returnCode;
+    }
 }
 
 ?>
