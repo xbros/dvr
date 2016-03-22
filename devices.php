@@ -6,36 +6,36 @@
 
 <body>
     <?php
-
     // display errors
     ini_set('display_errors', 1);
     ini_set('display_startup_errors', 1);
     error_reporting(E_ALL);
 
     // include files
-    require('include/Routes.php');
-
     require('include/settings.php');
+    require('include/DVR.php');
 
-    // Arguments =============================================
-
-    $user = "adrien";
+    // get user
     if (!empty($_SERVER["REMOTE_USER"]))
-        $user = $_SERVER["REMOTE_USER"];
+        define("DVR_USER", $_SERVER["REMOTE_USER"]);
+    else
+        define("DVR_USER", "anonymous");
 
-    // Display =============================================
+    // open log file and create if necessary
+    $ok = createFile(DVR_LOG_PATH);
+    define("DVR_LOG_HANDLE", fopen(DVR_LOG_PATH, "a"));
+    if ($ok)
+        logHeader();
 
-    // read config file
-    $routes = new Routes(CONFIG_FILE);
+    try {
+        $dvr = new DVR();
+        $dvr->printDevices();
+    } catch (DVRException $e) {
+        DVR::returnCode($e->getCode());
+        DVR::log($e->getMessage());
+    }
 
-    // get devices
-    $devices = $routes->get_devices($user);
-
-    // display devices
-    for ($i=0; $i<count($devices["devices"]); $i++)
-        echo $devices["devices"][$i] . " " . $devices["ips"][$i] . " <br>";
-
+    fclose(DVR_LOG_HANDLE);
     ?>
 </body>
-
 </html>

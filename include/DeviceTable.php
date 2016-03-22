@@ -1,6 +1,6 @@
 <?php
 
-class Routes {
+class DeviceTable {
     private $users = array();
     private $devices = array();
     private $ips = array();
@@ -9,7 +9,7 @@ class Routes {
         $fh = fopen($file, "r");
         
         if ($fh == false)
-            throw new Exception("Unable to open " . $file);
+            throw new DTException("unable to open ".$file);
 
         $row = 1;
         while (!feof($fh)) {
@@ -17,7 +17,7 @@ class Routes {
             if (count($fields) == 1 && empty(trim($fields[0])))
                 continue; // skip empty line
             if (count($fields) != 3)
-                throw new Exception("In file " . $file . ", row " . $row . ": rows must have 3 fields");
+                throw new DTException("in file ".$file.": row ".$row." does not have 3 fields");
             array_push($this->users, $fields[0]);
             array_push($this->devices, $fields[1]);
             array_push($this->ips, $fields[2]);
@@ -30,7 +30,7 @@ class Routes {
         $fh = fopen($file, "w");
 
         if ($fh == false)
-            throw new Exception("Unable to open " . $file);
+            throw new DTException("unable to open ".$file);
 
         for ($i=0; $i<count($this->users); $i++) {
             fputcsv($fh, array($this->users[$i], $this->devices[$i], $this->ips[$i]), " ");
@@ -66,7 +66,7 @@ class Routes {
         return $n;
     }
 
-    public function get_devices($user) {
+    public function getDevices($user) {
         $devices = array();
         $ips = array();
         for ($i=0; $i<count($this->users); $i++) {
@@ -85,12 +85,19 @@ class Routes {
         return $this;
     }
 
-    public function get_ip($row) {
+    public function getIp($row) {
         return $this->ips[$row];
     }
 
-    public function set_ip($row, $ip) {
+    public function setIp($row, $ip) {
         $this->ips[$row] = $ip;
+    }
+}
+
+
+class DTException extends Exception {
+    public function getMessage() {
+        return "DeviceTable exception: ".parent::getMessage();
     }
 }
 
