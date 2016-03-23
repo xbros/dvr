@@ -18,9 +18,8 @@ class DVR {
 	private $delete = false;
 
 	public function __construct($config_path=DVR_CONFIG_PATH, $max_devices=DVR_MAX_DEVICES) {
-		self::auth();
 		self::openLog();
-		self::setUser();
+		self::auth();
 
 		// check config path and create file if necessary
 		if (self::createFile($config_path))
@@ -160,12 +159,6 @@ class DVR {
 		return false;
 	}
 
-	public static function setUser() {
-	    self::$USER = "anonymous";
-	    if (!empty($_SERVER["PHP_AUTH_USER"]))
-	       self::$USER = $_SERVER["PHP_AUTH_USER"];
-	}
-
 	public static function openLog($log_path = DVR_LOG_PATH) {
     	// open log file and create if necessary
 	    $ok = self::createFile($log_path);
@@ -192,20 +185,30 @@ class DVR {
 
 	public static function auth($passwd_path=DVR_PASSWD_PATH) {
 		// read passwords
+		if (self::createFile($passwd_path))
+			self::log("create passwords file: ".realpath($passwd_path));
+
 		$fh = fopen($passwd_path, "r");
 		if (!$fh)
-			throw new Exception("Can not read file: ".realpath($passwd_path));
+			throw new Exception("unable to open ".realpath($passwd_path));
+
+        $row = 1;
 		while(!feof($fh)) {
 			$line = fgetcsv($fh, 1024, ":");
-			if (count($line)==1 && trim($line[0])=="")
+			if (count($line)==1 && empty(trim($line[0])))
 				continue;
+			if (count($line)!==2)
+                throw new Exception("in password file ".realpath($passwd_path).": row ".$row." does not have 2 fields");
 			$passwds[$line[0]] = $line[1];
+        	$row++;
 		}
+
 		// get username and password
 	    if (!empty($_SERVER['PHP_AUTH_USER'])) {
 	        $user = $_SERVER['PHP_AUTH_USER'];
 	        $pass = $_SERVER['PHP_AUTH_PW'];
 	    }
+
 	    // send error if not valid
 	    if (empty($user) || !in_array($user, array_keys($passwds)) || ($pass !== $passwds[$user])) {
 	        header('WWW-Authenticate: Basic realm="Authentication Required"');
@@ -213,6 +216,9 @@ class DVR {
 	        echo "badauth";
 	        die();
 	    }
+	    
+	    // set user
+	    self::$USER = $user;
     }
 }
 

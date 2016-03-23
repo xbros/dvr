@@ -8,7 +8,7 @@ class DeviceTable {
     public function __construct($file) {
         $fh = fopen($file, "r");
         
-        if ($fh == false)
+        if (!$fh)
             throw new DTException("unable to open ".realpath($file));
 
         $row = 1;
@@ -29,7 +29,7 @@ class DeviceTable {
     public function write($file) {
         $fh = fopen($file, "w");
 
-        if ($fh == false)
+        if (!$fh)
             throw new DTException("unable to open ".realpath($file));
 
         for ($i=0; $i<count($this->users); $i++) {
