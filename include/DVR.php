@@ -216,12 +216,10 @@ class DVR {
 	        echo "badauth";
 	        die();
 	    }
-	    
+
 	    // set user
 	    self::$USER = $user;
     }
-}
-
 }
 
 
