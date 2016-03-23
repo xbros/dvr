@@ -1,4 +1,10 @@
+
 RewriteEngine On
+
+# workaround for php as a fcgi (phpinfo - Server API: CGI/FastCGI)
+# sets HTTP_AUTHORIZATION environment variable to the value of user authentication string
+RewriteRule .* - [E=HTTP_AUTHORIZATION:%{HTTP:Authorization}]
+
+# add .php extension
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteRule ^([^\.]+)$ $1.php [NC,L]
-RewriteRule .* - [E=HTTP_AUTHORIZATION:%{HTTP:Authorization},L]

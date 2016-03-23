@@ -10,7 +10,7 @@ Protocole [dyndns2](https://help.dyn.com/remote-access-api/perform-update/)
 https://username:password@server.domain.fr/nic/update?hostname=devicename&myip=1.2.3.4
 ```
 - `username:password` = nom utilisateur et mot de passe sur serveur
-- `hostname` = nom du device. caractères alphanumerique + [_-.]. ex: samsung-galaxy
+- `hostname` = nom du device. minimum 3 caractères alphanumeriques ou [_-.] commencant par uen lettre ex: samsung-galaxy
 - `myip` = ip publique (optionnel). si omise, l'ip est déterminée par le serveur.
 - `offline` = `YES` ou `NOCHG` (optionnel). supprime le device de la table
 

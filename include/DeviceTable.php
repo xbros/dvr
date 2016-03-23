@@ -1,62 +1,84 @@
 <?php
 
+/// table of users devices ips
 class DeviceTable {
-    private $users = array();
-    private $devices = array();
-    private $ips = array();
+    private $users = array(); /// array of strings. usernames
+    private $devices = array(); /// array of strings. devices
+    private $ips = array(); /// array of strings. ips
 
-    public function __construct($file) {
-        $fh = fopen($file, "r");
-        
+    /// initialize table
+    /// read config file and set array members
+    /// @param $filepath string. path to config file to be read
+    /// @throw if failed to open file or invalid entry
+    public function __construct($filepath) {
+        // open file
+        $fh = fopen($filepath, "r");
         if (!$fh)
-            throw new DTException("unable to open ".realpath($file));
+            throw new DTException("failed to open ".realpath($filepath));
 
-        $row = 1;
+        // read lines
+        $i = 1;
         while (!feof($fh)) {
             $fields = fgetcsv($fh, 1024, " ");
-            if (count($fields) == 1 && empty(trim($fields[0])))
+            if (count($fields) == 1 && empty(trim($fields[0]))) {
+                $i++;
                 continue; // skip empty line
+            }
             if (count($fields) != 3)
-                throw new DTException("in file ".realpath($file).": row ".$row." does not have 3 fields");
+                throw new DTException("invalid config file ".realpath($filepath).": row ".$i." does not have 3 fields");
             array_push($this->users, $fields[0]);
             array_push($this->devices, $fields[1]);
             array_push($this->ips, $fields[2]);
-            $row++;
+            $i++;
         }
+        
+        // close file
         fclose($fh);
     }
 
-    public function write($file) {
-        $fh = fopen($file, "w");
+    /// write table in config file
+    /// @param $filepath string. path to config file to be written
+    /// @throw if failed to open file
+    public function write($filepath) {
+        $fh = fopen($filepath, "w");
 
         if (!$fh)
-            throw new DTException("unable to open ".realpath($file));
+            throw new DTException("failed to open ".realpath($filepath));
 
-        for ($i=0; $i<count($this->users); $i++) {
+        for ($i=0; $i<count($this->users); $i++)
             fputcsv($fh, array($this->users[$i], $this->devices[$i], $this->ips[$i]), " ");
-        }
 
         fclose($fh);
         return $this;
     }
 
+    /// find a user-device pair entry in the table
+    /// @return int. index found or false if not found
     public function find($user, $device) {
-        $row = false;
+        $ind = false;
         for ($i=0; $i<count($this->users); $i++) {
             if ($this->users[$i] == $user && $this->devices[$i] == $device) {
-                $row = $i;
+                $ind = $i;
                 break;
             }
         }
-        return $row;
+        return $ind;
     }
 
-    public function delete($row) {
-        array_splice($this->users, $row, 1);
-        array_splice($this->devices, $row, 1);
-        array_splice($this->ips, $row, 1);
+    /// delete entry from index
+    /// @param $ind int. entry index
+    /// @throw if invalid index
+    public function delete($ind) {
+        if ($ind<0 || $ind>=count($this->users))
+            throw DTException("delete failed. invalid index: ".$ind);
+        array_splice($this->users, $ind, 1);
+        array_splice($this->devices, $ind, 1);
+        array_splice($this->ips, $ind, 1);
     }
 
+    /// get number of devices of user
+    /// @param $user string. username
+    /// @return int
     public function ndevices($user) {
         $n = 0;
         for ($i=0; $i<count($this->users); $i++) {
@@ -66,6 +88,9 @@ class DeviceTable {
         return $n;
     }
 
+    /// get devices and ips of user
+    /// @param $user string. username
+    /// @return array with "device"=>"ip" entries
     public function getDevices($user) {
         $devices = array();
         $ips = array();
@@ -78,23 +103,39 @@ class DeviceTable {
         return array("devices"=>$devices, "ips"=>$ips);
     }
 
+    /// add device to the table
+    /// @param $user string. username
+    /// @param $device string. device name
+    /// @param $ip string. ip
     public function add($user, $device, $ip) {
         array_push($this->users, $user);
         array_push($this->devices, $device);
         array_push($this->ips, $ip);
-        return $this;
     }
 
-    public function getIp($row) {
-        return $this->ips[$row];
+    /// get ip by index
+    /// @param $ind int. index
+    /// @return string. the ip address
+    /// @throw if invalid index
+    public function getIp($ind) {
+        if ($ind<0 || $ind>=count($this->users))
+            throw DTException("getIp failed. invalid index: ".$ind);
+        return $this->ips[$ind];
     }
 
-    public function setIp($row, $ip) {
-        $this->ips[$row] = $ip;
+    /// set ip to index
+    /// @param $ind int. index
+    /// @param $ip string. ip address
+    /// @throw if invalid index
+    public function setIp($ind, $ip) {
+        if ($ind<0 || $ind>=count($this->users))
+            throw DTException("setIp failed. invalid index: ".$ind);
+        $this->ips[$ind] = $ip;
     }
 }
 
 
+/// exception thrown by DeviceTable class
 class DTException extends Exception {
     public function __construct($message, $code = 0, Exception $previous = null) {
         parent::__construct("DeviceTable exception: ".$message, $code, $previous);
