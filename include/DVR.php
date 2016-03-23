@@ -203,6 +203,7 @@ class DVR {
 			$passwds[$line[0]] = $line[1];
         	$row++;
 		}
+		fclose($fh);
 
 		// get username and password
 	    if (!empty($_SERVER['PHP_AUTH_USER'])) {
