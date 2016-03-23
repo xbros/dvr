@@ -2,6 +2,7 @@
 
 include(realpath(dirname(__FILE__)."/DeviceTable.php"));
 
+
 class DVR {
 	const VERSION = "1.0";
 
@@ -17,6 +18,7 @@ class DVR {
 	private $delete = false;
 
 	public function __construct($config_path=DVR_CONFIG_PATH, $max_devices=DVR_MAX_DEVICES) {
+		self::auth();
 		self::openLog();
 		self::setUser();
 
@@ -109,7 +111,9 @@ class DVR {
 		    $this->ip = $_SERVER['REMOTE_ADDR'];
 
 		// check device
-		if (empty($vars["hostname"]) || !preg_match("/^[A-Za-z]{1}[a-zA-Z0-9_\\-\\.]{2,}\$/", $vars["hostname"]))
+		if (empty($vars["hostname"]))
+		    throw new DVRException("ignore request. missig hostname value", "notfqdn");
+		if (!preg_match("/^[A-Za-z]{1}[a-zA-Z0-9_\\-\\.]{2,}\$/", $vars["hostname"]))
 		    throw new DVRException("ignore request. invalid hostname value: ".$vars["hostname"], "notfqdn");
 		$this->device = $vars["hostname"];
 
@@ -185,6 +189,33 @@ class DVR {
 	public static function closeLog() {
 		fclose(self::$LOG_HANDLE);
 	}
+
+	public static function auth($passwd_path=DVR_PASSWD_PATH) {
+		// read passwords
+		$fh = fopen($passwd_path, "r");
+		if (!$fh)
+			throw new Exception("Can not read file: ".realpath($passwd_path));
+		while(!feof($fh)) {
+			$line = fgetcsv($fh, 1024, ":");
+			if (count($line)==1 && trim($line[0])=="")
+				continue;
+			$passwds[$line[0]] = $line[1];
+		}
+		// get username and password
+	    if (!empty($_SERVER['PHP_AUTH_USER'])) {
+	        $user = $_SERVER['PHP_AUTH_USER'];
+	        $pass = $_SERVER['PHP_AUTH_PW'];
+	    }
+	    // send error if not valid
+	    if (empty($user) || !in_array($user, array_keys($passwds)) || ($pass !== $passwds[$user])) {
+	        header('WWW-Authenticate: Basic realm="Authentication Required"');
+	        header('HTTP/1.0 401 Unauthorized');
+	        echo "badauth";
+	        die();
+	    }
+    }
+}
+
 }
 
 
