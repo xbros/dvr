@@ -206,7 +206,7 @@ class DVR {
 
 		// get username and password
 	    if (!empty($_SERVER['PHP_AUTH_USER'])) {
-	        self::$USER = $_SERVER['PHP_AUTH_USER'];
+	        $user = $_SERVER['PHP_AUTH_USER'];
 	        $pass = $_SERVER['PHP_AUTH_PW'];
 	    }
 
