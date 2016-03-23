@@ -195,7 +195,7 @@ class DVR {
 		$passwds = array();
         $row = 1;
 		while(!feof($fh)) {
-			$line = fgetcsv($fh, 1024, ":");
+			$line = fgetcsv($fh, 1024, " ");
 			if (count($line)==1 && empty(trim($line[0])))
 				continue;
 			if (count($line)!==2)
@@ -219,7 +219,7 @@ class DVR {
         	throw new DVRException("missing authentication", "badauth");
         if (!in_array($user, array_keys($passwds)))
         	throw new DVRException("unknown username: ".$user, "badauth");
-        
+
 		// set user
 		self::$USER = $user;
 
