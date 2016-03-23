@@ -8,7 +8,7 @@ class DVR {
 
 	public static $ALLOWED_KEYS = array("hostname", "myip", "wildcard", "mx", "backmx", "offline", "system", "url");
 	public static $LOG_HANDLE;
-	public static $USER;
+	public static $USER = "anonymous";
 
 	private $config_path;
 	private $max_devices;
@@ -206,7 +206,7 @@ class DVR {
 
 		// get username and password
 	    if (!empty($_SERVER['PHP_AUTH_USER'])) {
-	        $user = $_SERVER['PHP_AUTH_USER'];
+	        self::$USER = $_SERVER['PHP_AUTH_USER'];
 	        $pass = $_SERVER['PHP_AUTH_PW'];
 	    }
 
@@ -214,12 +214,17 @@ class DVR {
 	    if (empty($user) || !in_array($user, array_keys($passwds)) || ($pass !== $passwds[$user])) {
 	        header('WWW-Authenticate: Basic realm="Authentication Required"');
 	        header('HTTP/1.0 401 Unauthorized');
-	        echo "badauth";
-	        die();
 	    }
+        if (empty($user))
+        	throw new DVRException("missing authentication", "badauth");
 
-	    // set user
-	    self::$USER = $user;
+		// set user
+		self::$USER = $user;
+
+        if (!in_array($user, array_keys($passwds)))
+        	throw new DVRException("unknown username: ".$user, "badauth");
+        if ($pass !== $passwds[$user])
+        	throw new DVRException("invalid password", "badauth");
     }
 }
 
