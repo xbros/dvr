@@ -34,7 +34,7 @@ user passwd
 ```
 
 ### table des ip
-- fichier texte `~/.dvrdvr.conf`
+- fichier texte `~/.dvr/dvr.conf`
 - format csv space delimiter
 - une ligne par device
 
