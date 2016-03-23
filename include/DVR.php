@@ -192,6 +192,7 @@ class DVR {
 		if (!$fh)
 			throw new Exception("unable to open ".realpath($passwd_path));
 
+		$passwds = array();
         $row = 1;
 		while(!feof($fh)) {
 			$line = fgetcsv($fh, 1024, ":");
