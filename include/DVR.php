@@ -158,8 +158,8 @@ class DVR {
 
 	public static function setUser() {
 	    self::$USER = "anonymous";
-	    if (!empty($_SERVER["REMOTE_USER"]))
-	       self::$USER = $_SERVER["REMOTE_USER"];
+	    if (!empty($_SERVER["PHP_AUTH_USER"]))
+	       self::$USER = $_SERVER["PHP_AUTH_USER"];
 	}
 
 	public static function openLog($log_path = DVR_LOG_PATH) {
