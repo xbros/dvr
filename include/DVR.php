@@ -217,12 +217,12 @@ class DVR {
 	    }
         if (empty($user))
         	throw new DVRException("missing authentication", "badauth");
-
+        if (!in_array($user, array_keys($passwds)))
+        	throw new DVRException("unknown username: ".$user, "badauth");
+        
 		// set user
 		self::$USER = $user;
 
-        if (!in_array($user, array_keys($passwds)))
-        	throw new DVRException("unknown username: ".$user, "badauth");
         if ($pass !== $passwds[$user])
         	throw new DVRException("invalid password", "badauth");
     }
