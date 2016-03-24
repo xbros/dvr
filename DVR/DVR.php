@@ -2,9 +2,9 @@
 namespace DVR;
 
 /**
- * Dynamic VPN routes controler class
+ * Dynamic VPN routes application class
  */
-class DVR {
+class App {
     const VERSION = "0.1"; /** @var string current software version */
     /** @var array authorized parameter keys in the request */
     public static $ALLOWED_KEYS = array("hostname", "myip", "wildcard", "mx", "backmx", "offline", "system", "url");
@@ -376,7 +376,7 @@ class DVR {
 /**
  * exception with return code field to be displayed on the webpage
  * and message to be logged
- * thrown by DVR class
+ * thrown by App class
  */
 class RCException extends \Exception {
     private $returnCode; /** @var string return code */

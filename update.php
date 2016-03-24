@@ -16,17 +16,17 @@
     require('DVR/DVR.php');
 
     try {
-        $dvr = new \DRV\DVR();
+        $dvr = new DRV\App();
         $dvr->updateTable();
-    } catch (\DRV\RCException $e) {
-        \DRV\DVR::returnCode($e->getReturnCode());
-        \DRV\DVR::log($e->getMessage());
+    } catch (DRV\RCException $e) {
+        DRV\App::returnCode($e->getReturnCode());
+        DRV\App::log($e->getMessage());
     } catch (Exception $e) {
         http_response_code(500); // Internal Server Error
-        \DRV\DVR::returnCode("911");
-        \DRV\DVR::log("generic exception: ".$e->getMessage());
+        DRV\App::returnCode("911");
+        DRV\App::log("generic exception: ".$e->getMessage());
     } finally {
-        \DRV\DVR::closeLog();
+        DRV\App::closeLog();
     }
     ?>
 </body>
