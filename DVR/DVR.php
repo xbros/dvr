@@ -227,13 +227,13 @@ class DVR {
             if (!file_exists($dir)) {
                 // create dir
                 if (!mkdir($dir)) {
-                    throw new Exception("failed to create dir: ".realpath($dir));
+                    throw new \Exception("failed to create dir: ".realpath($dir));
                 }
                 chmod($dir, $mode);
             }
             // create file
             if (!touch($path)) {
-                throw new Exception("failed to create file: ".realpath($path));
+                throw new \Exception("failed to create file: ".realpath($path));
             }
             chmod($path, $mode);
 
@@ -332,7 +332,7 @@ class DVR {
         // open file
         $fh = fopen($passwdPath, "r");
         if (!$fh) {
-            throw new Exception("failed to open ".realpath($passwdPath));
+            throw new \Exception("failed to open ".realpath($passwdPath));
         }
 
         // read file lines
@@ -349,7 +349,7 @@ class DVR {
             } elseif (count($line) === 2) {
                 $passwds[$line[0]] = $line[1];
             } else {
-                throw new Exception("invalid passwords file ".realpath($passwdPath).": line ".$i." must have 1 or 2 fields");
+                throw new \Exception("invalid passwords file ".realpath($passwdPath).": line ".$i." must have 1 or 2 fields");
             }
             $i++;
         }
@@ -378,7 +378,7 @@ class DVR {
  * with return code field to be displayed on the webpage
  * and message to be logged
  */
-class DVRException extends Exception {
+class DVRException extends \Exception {
     private $returnCode; /** @var string return code */
 
     /**
@@ -386,7 +386,7 @@ class DVRException extends Exception {
      * @param string $code return code to be displayed
      * @param Exception $previous previous excetion if rethrown
      */
-    public function __construct($message, $code, Exception $previous = null) {
+    public function __construct($message, $code, \Exception $previous = null) {
         $this->returnCode = $code;
         parent::__construct($message, 0, $previous);
     }
