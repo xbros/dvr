@@ -2,6 +2,14 @@ dvr
 ==========
 Dynamic VPN routes
 
+Install
+========
+1. Placer les fichiers dans le sous-répertoire `nic` du DocumentRoot.
+    ex: `~/public_html/nic`
+2. Editer le fichier de config `DVR/config.php`
+3. Tester l'url `https://server.domain.fr/nic/update`
+4. Si nécessaire, ajouter des utilisateurs dans le fichier passwords
+
 Update API
 ==============
 Protocole [dyndns2](https://help.dyn.com/remote-access-api/perform-update/)
@@ -70,4 +78,3 @@ envoie la requete avec l'ip public ttes les 5min si l'ip change
 utiliser des clients pour serveurs DNS:
 - linux: ddclient
 - android: dynamic dns update
-
