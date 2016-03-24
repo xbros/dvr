@@ -13,7 +13,7 @@
 
     require('DVR/config.php');
     require('DVR/DeviceTable.php');
-    require('DVR/DVR.php');
+    require('DVR/App.php');
 
     try {
         $dvr = new DRV\App();
