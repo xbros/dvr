@@ -19,7 +19,7 @@
     try {
         $dvr = new DVR();
         $dvr->printDevices();
-    } catch (DVR\RCException $e) {
+    } catch (\DVR\RCException $e) {
         DVR::returnCode($e->getReturnCode());
         DVR::log($e->getMessage());
     } catch (\Exception $e) {
