@@ -7,7 +7,7 @@ include(realpath(dirname(__FILE__)."/DeviceTable.php"));
 class DVR {
     const VERSION = "1.0"; /// current software version
 
-    /// authorized variable keys in the request
+    /// authorized parameter keys in the request
     public static $ALLOWED_KEYS = array("hostname", "myip", "wildcard", "mx", "backmx", "offline", "system", "url");
 
     private static $LOG_HANDLE; /// file handle of the log file returned by fopen
@@ -62,10 +62,10 @@ class DVR {
     /// apply request to update the table of devices ips
     /// read config file, apply change and write config file if needed
     /// log action and display "good" return code if success
-    /// @param $vars array with request variables. if empty, defaults to $_GET or $_POST
+    /// @param $params array with request parameters. if empty, defaults to $_GET or $_POST
     /// @throw if no change needed or any error reading config file
-    public function updateTable($vars = null) {
-        self::parseRequest($vars);
+    public function updateTable($params = null) {
+        self::parseRequest($params);
 
         try {
             // read config file
@@ -108,21 +108,21 @@ class DVR {
     }
 
     /// validate request and set class members $hostname, $ip and $offline
-    /// @param $vars array with request variables. if empty, defaults to $_GET or $_POST
+    /// @param $params array with request parameters. if empty, defaults to $_GET or $_POST
     /// @throw if invalid
-    private function parseRequest($vars) {
-        if (empty($var))
-            $vars = self::getRequestVars();
+    private function parseRequest($params) {
+        if (empty($params))
+            $params = self::getRequestVars();
 
-        // check variable keys are allowed
-        foreach(array_keys($vars) as $key) {
+        // check parameters keys are allowed
+        foreach(array_keys($params) as $key) {
             if (!in_array($key, self::$ALLOWED_KEYS))
-                self::badrequest("invalid variable key: ".$key, "abuse");
+                self::badrequest("invalid parameter key: ".$key, "abuse");
         }
 
         // get ip
-        if (!empty($vars["myip"]))
-            $this->ip = filter_var($vars["myip"], FILTER_VALIDATE_IP);
+        if (!empty($params["myip"]))
+            $this->ip = filter_var($params["myip"], FILTER_VALIDATE_IP);
         // if missing myip, determine ip from server info
         if (!$this->ip && !empty($_SERVER['HTTP_CLIENT_IP']))
             $this->ip = filter_var($_SERVER['HTTP_CLIENT_IP'], FILTER_VALIDATE_IP);
@@ -132,18 +132,18 @@ class DVR {
             $this->ip = $_SERVER['REMOTE_ADDR'];
 
         // check hostname
-        if (empty($vars["hostname"]))
+        if (empty($params["hostname"]))
                 self::badrequest("missing hostname value", "notfqdn");
         // minimum 3 characters: alphanumeric or [_-.] and starts with letter
-        if (!preg_match("/^[A-Za-z]{1}[a-zA-Z0-9_\\-\\.]{2,}\$/", $vars["hostname"]))
-                self::badrequest("invalid hostname value: ".$vars["hostname"], "notfqdn");
-        $this->device = $vars["hostname"];
+        if (!preg_match("/^[A-Za-z]{1}[a-zA-Z0-9_\\-\\.]{2,}\$/", $params["hostname"]))
+                self::badrequest("invalid hostname value: ".$params["hostname"], "notfqdn");
+        $this->device = $params["hostname"];
 
         // check offline
-        if (!empty($vars["offline"])) {
-            if (!in_array($vars["offline"], array("YES", "NOCHG")))
-                self::badrequest("invalid offline value: ".$vars["offline"], "abuse");
-            if ($vars["offline"] == "YES")
+        if (!empty($params["offline"])) {
+            if (!in_array($params["offline"], array("YES", "NOCHG")))
+                self::badrequest("invalid offline value: ".$params["offline"], "abuse");
+            if ($params["offline"] == "YES")
                 $this->delete = true;
         }
     }
@@ -160,19 +160,19 @@ class DVR {
     /// return reference to either $_GET or $_POST
     /// @return reference to array
     /// @throw if request method is neither GET nor POST
-    public static function getRequestVars() {
+    public static function getRequestParams() {
         switch ($_SERVER['REQUEST_METHOD']) {
             case "GET":
-                $vars =& $_GET;
+                $params =& $_GET;
                 break;
             case "POST":
-                $vars =& $_POST;
+                $params =& $_POST;
                 break;
             default:
                 http_response_code(405); // Method Not Allowed
                 throw new DVRException("request method not allowed: ".$_SERVER['REQUEST_METHOD'].". use GET or POST", "abuse");
         }
-        return $vars;
+        return $params;
     }
 
     /// echo return code
@@ -311,7 +311,7 @@ class DVR {
     public static function badauth($message) {
         header('WWW-Authenticate: Basic realm="Authentication Required"');
         http_response_code(401); // Unauthorized
-        throw new DVRException("authentication failed. ".$message, "badauth");
+        throw new DVRException("unauthorized. ".$message, "badauth");
     }
 }
 
