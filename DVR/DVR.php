@@ -47,7 +47,7 @@ class DVR {
 
     /**
      * display devices and ips of authenticated user
-     * @throws DVRException if any error reading config file
+     * @throws RCException if any error reading config file
      */
     public function printDevices() {
         try {
@@ -65,7 +65,7 @@ class DVR {
             self::log("printed user devices");
         } catch (DTException $e) {
             http_response_code(500); // Internal Server Error
-            throw new DVRException($e->getMessage(), "911", $e);
+            throw new RCException($e->getMessage(), "911", $e);
         }
     }
 
@@ -74,7 +74,7 @@ class DVR {
      * read config file, apply change and write config file if needed
      * log action and display "good" return code if success
      * @param array $params contains request parameters. if empty, defaults to $_GET or $_POST
-     * @throws DVRException if no change needed or any error reading config file
+     * @throws RCException if no change needed or any error reading config file
      */
     public function updateTable($params = null) {
         self::parseRequest($params);
@@ -89,7 +89,7 @@ class DVR {
             if ($this->delete) {
                 // delete device
                 if ($ind === false) {
-                    throw new DVRException("ignored delete device: ".$this->device, "nochg");
+                    throw new RCException("ignored delete device: ".$this->device, "nochg");
                 } else {
                     $table->delete($ind);
                     self::log("deleted device: ".$this->device);
@@ -98,7 +98,7 @@ class DVR {
             } elseif ($ind === false) {
                 // add device
                 if ($table->countDevices(self::$USER)>=$this->maxDevices) {
-                    throw new DVRException("ignored add device: ".$this->device.". max number of devices reached: ".$this->maxDevices, "numhost");
+                    throw new RCException("ignored add device: ".$this->device.". max number of devices reached: ".$this->maxDevices, "numhost");
                 }
                 $table->add(self::$USER, $this->device, $this->ip);
                 self::log("added device: ".$this->device." ".$this->ip);
@@ -106,7 +106,7 @@ class DVR {
             } else {
                 // change ip
                 if ($table->getIp($ind) === $this->ip) {
-                    throw new DVRException("ignored change device: ".$this->device." ".$this->ip, "nochg ".$this->ip);
+                    throw new RCException("ignored change device: ".$this->device." ".$this->ip, "nochg ".$this->ip);
                 }
                 $table->setIp($ind, $this->ip);
                 self::log("changed device: ".$this->device." ".$this->ip);
@@ -117,14 +117,14 @@ class DVR {
             $table->write($this->configPath);
         } catch (DTException $e) {
             http_response_code(500); // Internal Server Error
-            throw new DVRException($e->getMessage(), "911", $e);
+            throw new RCException($e->getMessage(), "911", $e);
         }
     }
 
     /**
      * validate request and set class members $hostname, $ip and $offline
      * @param array $params contains request parameters. if empty, defaults to $_GET or $_POST
-     * @throws DVRException if invalid
+     * @throws RCException if invalid
      */
     private function parseRequest($params) {
         if (empty($params)) {
@@ -178,17 +178,17 @@ class DVR {
      * set response header for bad request and throw exception
      * @param string $message exception message
      * @param string $returnCode return code
-     * @throws DVRException with given message and return code
+     * @throws RCException with given message and return code
      */
     public static function badrequest($message, $returnCode="abuse") {
         http_response_code(400); // Bad Request
-        throw new DVRException("bad request. ".$message, $returnCode);
+        throw new RCException("bad request. ".$message, $returnCode);
     }
 
     /**
      * return reference to either $_GET or $_POST
      * @return array reference to array
-     * @throws DVRException if request method is neither GET nor POST
+     * @throws RCException if request method is neither GET nor POST
      */
     public static function getRequestParams() {
         switch ($_SERVER['REQUEST_METHOD']) {
@@ -200,7 +200,7 @@ class DVR {
                 break;
             default:
                 http_response_code(405); // Method Not Allowed
-                throw new DVRException("request method not allowed: ".$_SERVER['REQUEST_METHOD'].". use GET or POST", "abuse");
+                throw new RCException("request method not allowed: ".$_SERVER['REQUEST_METHOD'].". use GET or POST", "abuse");
         }
 
         return $params;
@@ -363,22 +363,22 @@ class DVR {
     /**
      * set response header for authentication and throw badauth exception
      * @param string $message exception message
-     * @throws DVRException badauth exception
+     * @throws RCException badauth exception
      */
     public static function badauth($message) {
         header('WWW-Authenticate: Basic realm="Authentication Required"');
         http_response_code(401); // Unauthorized
-        throw new DVRException("unauthorized. ".$message, "badauth");
+        throw new RCException("unauthorized. ".$message, "badauth");
     }
 }
 
 
 /**
- * exception thrown by DVR class
- * with return code field to be displayed on the webpage
+ * exception with return code field to be displayed on the webpage
  * and message to be logged
+ * thrown by DVR class
  */
-class DVRException extends \Exception {
+class RCException extends \Exception {
     private $returnCode; /** @var string return code */
 
     /**

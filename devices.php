@@ -14,14 +14,15 @@
     require('DVR/config.php');
     require('DVR/DeviceTable.php');
     require('DVR/DVR.php');
+    use DVR\DVR;
 
     try {
-        $dvr = new DVR\DVR();
+        $dvr = new DVR();
         $dvr->printDevices();
-    } catch (DVR\DVRException $e) {
+    } catch (DVR\RCException $e) {
         DVR::returnCode($e->getReturnCode());
         DVR::log($e->getMessage());
-    } catch (Exception $e) {
+    } catch (\Exception $e) {
         http_response_code(500); // Internal Server Error
         DVR::returnCode("911");
         DVR::log("generic exception: ".$e->getMessage());
