@@ -110,7 +110,7 @@ class App {
                 }
                 $table->setIp($ind, $this->ip);
                 self::log("changed device: ".$this->device." ".$this->ip);
-                self::returnCode("good ".$ithis->p);
+                self::returnCode("good ".$this->p);
             }
 
             // write config file
