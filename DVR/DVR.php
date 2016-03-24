@@ -19,7 +19,7 @@ class DVR {
     /** @var string name of the user device to be set */
     private $device;
     /** @var string ip to be set to the user device */
-    private $ip = false
+    private $ip = false;
     /** @var bool. true to delete device from table */
     private $delete = false;
 
