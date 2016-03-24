@@ -19,10 +19,10 @@
     try {
         $dvr = new DVR();
         $dvr->printDevices();
-    } catch (\DVR\RCException $e) {
+    } catch (DVR\RCException $e) {
         DVR::returnCode($e->getReturnCode());
         DVR::log($e->getMessage());
-    } catch (\Exception $e) {
+    } catch (Exception $e) {
         http_response_code(500); // Internal Server Error
         DVR::returnCode("911");
         DVR::log("generic exception: ".$e->getMessage());
