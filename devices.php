@@ -21,6 +21,7 @@
         DVR::returnCode($e->getReturnCode());
         DVR::log($e->getMessage());
     } catch (Exception $e) {
+        http_response_code(500); // Internal Server Error
         DVR::returnCode("911");
         DVR::log("generic exception: ".$e->getMessage());
     } finally {

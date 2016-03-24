@@ -31,7 +31,7 @@ class DeviceTable {
             array_push($this->ips, $fields[2]);
             $i++;
         }
-        
+
         // close file
         fclose($fh);
     }
