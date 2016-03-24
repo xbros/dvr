@@ -11,13 +11,14 @@
     // ini_set('display_startup_errors', 1);
     // error_reporting(E_ALL);
 
-    require('include/config.php');
-    require('include/DVR.php');
+    require('DVR/config.php');
+    require('DVR/DeviceTable.php');
+    require('DVR/DVR.php');
 
     try {
-        $dvr = new DVR();
+        $dvr = new DVR\DVR();
         $dvr->printDevices();
-    } catch (DVRException $e) {
+    } catch (DVR\DVRException $e) {
         DVR::returnCode($e->getReturnCode());
         DVR::log($e->getMessage());
     } catch (Exception $e) {
