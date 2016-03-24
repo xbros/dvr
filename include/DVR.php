@@ -112,7 +112,7 @@ class DVR {
     /// @throw if invalid
     private function parseRequest($params) {
         if (empty($params))
-            $params = self::getRequestVars();
+            $params = self::getRequestParams();
 
         // check parameters keys are allowed
         foreach(array_keys($params) as $key) {
