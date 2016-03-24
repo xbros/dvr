@@ -6,10 +6,10 @@
 
 <body>
     <?php
-    // display errors
-    ini_set('display_errors', 1);
-    ini_set('display_startup_errors', 1);
-    error_reporting(E_ALL);
+    // // display errors
+    // ini_set('display_errors', 1);
+    // ini_set('display_startup_errors', 1);
+    // error_reporting(E_ALL);
 
     require('DVR/config.php');
     require('DVR/DeviceTable.php');
