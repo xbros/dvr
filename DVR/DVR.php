@@ -31,8 +31,8 @@ class DVR {
      * @param string $passwdPath path to passwords file
      * @param int $maxDevices max number of devices per user in the table
      */
-    public function __construct($configPath=DVR_CONFIG_PATH, $logPath=DVR_LOG_PATH,
-                                $passwdPath=DVR_PASSWD_PATH, $maxDevices=DVR_MAX_DEVICES) {
+    public function __construct($configPath=CONFIG_PATH, $logPath=LOG_PATH,
+                                $passwdPath=PASSWD_PATH, $maxDevices=MAX_DEVICES) {
         self::openLog($logPath);
         self::auth($passwdPath);
 
@@ -221,7 +221,7 @@ class DVR {
      * @return bool true if created. false otherwise
      * @throws Exception if failed to create dir or file
      */
-    public static function createFile($path, $mode=DVR_MODE) {
+    public static function createFile($path, $mode=MODE) {
         if (!file_exists($path)) {
             $dir = dirname($path);
             if (!file_exists($dir)) {
@@ -248,7 +248,7 @@ class DVR {
      * create file with header if necessary
      * @param string $logPath path to log file
      */
-    public static function openLog($logPath = DVR_LOG_PATH) {
+    public static function openLog($logPath = LOG_PATH) {
         // close if already open
         if (!empty(self::$LOG_HANDLE)) {
             self::closeLog();
@@ -288,7 +288,7 @@ class DVR {
      * check authentication and set $USER static member
      * @param string $passwdPath path to passwords file. ignore if empty
      */
-    public static function auth($passwdPath=DVR_PASSWD_PATH) {
+    public static function auth($passwdPath=PASSWD_PATH) {
         if (!empty($passwdPath)) {
             // get passwords table
             if (self::createFile($passwdPath)) {
@@ -328,7 +328,7 @@ class DVR {
      * @return array contains "user"=>"passwd" entries
      * @throws Exception if failed to open file
      */
-    public static function readPasswds($passwdPath=DVR_PASSWD_PATH) {
+    public static function readPasswds($passwdPath=PASSWD_PATH) {
         // open file
         $fh = fopen($passwdPath, "r");
         if (!$fh) {
