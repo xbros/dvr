@@ -20,8 +20,13 @@ class App {
     private $device;
     /** @var string ip to be set to the user device */
     private $ip = false;
-    /** @var bool. true to delete device from table */
-    private $delete = false;
+    /**
+     * @var string|null
+     *   "YES": delete device from table if existing.
+     *   "NOCHG": do not delete if existing and do not add if not.
+     *   null: ignore.
+     */
+    private $offline = null;
 
     /**
      * initialize DVR
@@ -86,31 +91,37 @@ class App {
             // find device
             $ind = $table->find(self::$USER, $this->device);
 
-            if ($this->delete) {
-                // delete device
-                if ($ind === false) {
-                    throw new RCException("ignored delete device: ".$this->device, "nochg");
+            if ($ind === false) {
+                // device not found
+                if ($this->offline === "YES") {
+                    throw new RCException("ignored delete device: ".$this->device, "nochg offline");
+                } elseif ($this->offline === "NOCHG") {
+                    throw new RCException("ignored add device: ".$this->device.". offline=NOCHG", "nochg offline");
+                } elseif ($table->countDevices(self::$USER)>=$this->maxDevices) {
+                    throw new RCException("ignored add device: ".$this->device.". max number of devices reached: ".$this->maxDevices, "numhost");
                 } else {
+                    // add device
+                    $table->add(self::$USER, $this->device, $this->ip);
+                    self::log("added device: ".$this->device." ".$this->ip);
+                    self::returnCode("good ".$this->ip);
+                }
+            } else {
+                // device found
+                if ($this->offline === "YES") {
+                    // delete device
                     $table->delete($ind);
                     self::log("deleted device: ".$this->device);
                     self::returnCode("good deleted ".$this->device);
+                } else {
+                    if ($table->getIp($ind) === $this->ip) {
+                        throw new RCException("ignored change device: ".$this->device." ".$this->ip, "nochg ".$this->ip);
+                    } else {
+                        // change ip
+                        $table->setIp($ind, $this->ip);
+                        self::log("changed device: ".$this->device." ".$this->ip);
+                        self::returnCode("good ".$this->p);
+                    }
                 }
-            } elseif ($ind === false) {
-                // add device
-                if ($table->countDevices(self::$USER)>=$this->maxDevices) {
-                    throw new RCException("ignored add device: ".$this->device.". max number of devices reached: ".$this->maxDevices, "numhost");
-                }
-                $table->add(self::$USER, $this->device, $this->ip);
-                self::log("added device: ".$this->device." ".$this->ip);
-                self::returnCode("good ".$this->ip);
-            } else {
-                // change ip
-                if ($table->getIp($ind) === $this->ip) {
-                    throw new RCException("ignored change device: ".$this->device." ".$this->ip, "nochg ".$this->ip);
-                }
-                $table->setIp($ind, $this->ip);
-                self::log("changed device: ".$this->device." ".$this->ip);
-                self::returnCode("good ".$this->p);
             }
 
             // write config file
@@ -155,7 +166,7 @@ class App {
 
         // check hostname
         if (empty($params["hostname"])) {
-                self::badrequest("missing hostname value", "notfqdn");
+            self::badrequest("missing hostname value", "notfqdn");
         }
         // minimum 3 characters: alphanumeric or [_-.] and starts with letter
         if (!preg_match("/^[A-Za-z]{1}[a-zA-Z0-9_\\-\\.]{2,}\$/", $params["hostname"])) {
@@ -168,9 +179,7 @@ class App {
             if (!in_array($params["offline"], array("YES", "NOCHG"))) {
                 self::badrequest("invalid offline value: ".$params["offline"], "abuse");
             }
-            if ($params["offline"] === "YES") {
-                $this->delete = true;
-            }
+            $this->offline = $params["offline"];
         }
     }
 
