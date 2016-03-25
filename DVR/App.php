@@ -38,7 +38,9 @@ class App {
 	 */
 	public function __construct($configPath = CONFIG_PATH, $logPath = LOG_PATH,
 		$passwdPath = PASSWD_PATH, $maxDevices = MAX_DEVICES) {
+		// open log file
 		self::openLog($logPath);
+		// authenticate user if $passwdPath not empty
 		self::auth($passwdPath);
 
 		// check config path and create file if necessary

@@ -164,6 +164,14 @@ class DeviceTable {
 		}
 		$this->ips[$ind] = $ip;
 	}
+
+    /**
+     * get the unique ip addresses in the table
+     * @return array containing unique ip addresses
+     */
+    public function getUniqueIps() {
+        return array_unique($ips);
+    }
 }
 
 /**
