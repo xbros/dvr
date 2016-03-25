@@ -119,7 +119,7 @@ class App {
 						// change ip
 						$table->setIp($ind, $this->ip);
 						self::log("changed device: " . $this->device . " " . $this->ip);
-						self::returnCode("good " . $this->p);
+						self::returnCode("good " . $this->ip);
 					}
 				}
 			}
@@ -313,7 +313,7 @@ class App {
 		if (empty($user)) {
 			self::badauth("authentication missing");
 		}
-		if (!empty($passwds) && !in_array($user, array_keys($passwds))) {
+		if (!empty($passwdPath) && !in_array($user, array_keys($passwds))) {
 			self::badauth("unknown username: " . $user);
 		}
 
