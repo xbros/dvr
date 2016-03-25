@@ -170,7 +170,7 @@ class DeviceTable {
      * @return array containing unique ip addresses
      */
     public function getUniqueIps() {
-        return array_unique($ips);
+        return array_unique($this->ips);
     }
 }
 
