@@ -50,7 +50,7 @@ class App {
 	 * display devices and ips of authenticated user
 	 * @throws RCException if any error reading config file
 	 */
-	public function printDevices($sep = '<br>' . PHP_EOL) {
+	public function printDevices($sep = "<br>\n") {
 		try {
 			// read config file
 			$table = new DeviceTable($this->configPath);
