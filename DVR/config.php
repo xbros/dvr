@@ -3,7 +3,7 @@
 namespace DVR;
 
 const VERSION = '0.1';
-const DEBUG = false;
+const DEBUG = true;
 
 if (DEBUG) {
 	// display errors
