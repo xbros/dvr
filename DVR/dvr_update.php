@@ -7,7 +7,7 @@ require realpath(dirname(__FILE__)) . '/PasswdTable.php';
 require realpath(dirname(__FILE__)) . '/DeviceTable.php';
 require realpath(dirname(__FILE__)) . '/App.php';
 
-const USAGE = 'usage: dvr update --auth=<user>:<pw> --hostname=<device> [--myip=<ip>] [--offline=NOCHG|YES]' . PHP_EOL;
+define('DVR\USAGE', 'usage: dvr update --auth=<user>:<pw> --hostname=<device> [--myip=<ip>] [--offline=NOCHG|YES]' . PHP_EOL);
 
 try {
 	$dvr = new App();

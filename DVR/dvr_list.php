@@ -7,7 +7,7 @@ require realpath(dirname(__FILE__)) . '/PasswdTable.php';
 require realpath(dirname(__FILE__)) . '/DeviceTable.php';
 require realpath(dirname(__FILE__)) . '/App.php';
 
-const USAGE = 'usage: dvr list --auth=<user>:<pw>' . PHP_EOL;
+define('DVR\USAGE', 'usage: dvr list --auth=<user>:<pw>' . PHP_EOL);
 
 try {
 	$dvr = new App();

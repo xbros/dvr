@@ -5,11 +5,11 @@ require realpath(dirname(__FILE__)) . '/config.php';
 require realpath(dirname(__FILE__)) . '/utils.php';
 require realpath(dirname(__FILE__)) . '/PasswdTable.php';
 
-const USAGE = 'usage: dvr passwd <command> --auth=<user>:<pw>' . PHP_EOL
+define('DVR\USAGE', 'usage: dvr passwd <command> --auth=<user>:<pw>' . PHP_EOL
 	. 'commands: -a   add' . PHP_EOL
 	. '          -c   change' . PHP_EOL
 	. '          -v   verify' . PHP_EOL
-	. '          -d   delete' . PHP_EOL;
+	. '          -d   delete' . PHP_EOL);
 
 try {
 	$opts = getopt('acvd', array('auth:'));
