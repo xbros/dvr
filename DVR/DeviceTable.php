@@ -1,16 +1,17 @@
 <?php
+
 namespace DVR;
 
 /**
  * table of users devices ips
  */
 class DeviceTable {
-	/** @var array of strings. usernames */
-	private $users = array();
-	/** @var array of strings. devices */
-	private $devices = array();
 	/** @var array of strings. ips */
 	private $ips = array();
+	/** @var array of strings. devices */
+	private $devices = array();
+	/** @var array of strings. usernames */
+	private $users = array();
 
 	/**
 	 * initialize table
@@ -18,27 +19,31 @@ class DeviceTable {
 	 * @param  string $filepath path to config file to be read
 	 * @throws DTException if failed to open file or invalid entry
 	 */
-	public function __construct($filepath) {
+	public function __construct($filepath = null) {
+		if (is_null($filepath)) {
+			return;
+		}
+
 		// open file
-		$fh = fopen($filepath, "r");
+		$fh = fopen($filepath, 'r');
 		if (!$fh) {
-			throw new DTException("failed to open " . realpath($filepath));
+			throw new DTException('failed to open ' . realpath($filepath));
 		}
 
 		// read lines
 		$i = 1;
 		while (!feof($fh)) {
-			$fields = fgetcsv($fh, 1024, " ");
-			if (count($fields) === 1 && empty(trim($fields[0]))) {
+			$line = preg_split('/\s+/', trim(fgets($fh)));
+			if (count($line) === 1 && empty($line[0])) {
 				$i++;
 				continue; // skip empty line
 			}
-			if (count($fields) !== 3) {
-				throw new DTException("invalid config file " . realpath($filepath) . ": line " . $i . " does not have 3 fields");
+			if (count($line) !== 3) {
+				throw new DTException('invalid config file ' . realpath($filepath) . ': line ' . $i . ' does not have 3 fields');
 			}
-			array_push($this->users, $fields[0]);
-			array_push($this->devices, $fields[1]);
-			array_push($this->ips, $fields[2]);
+			array_push($this->ips, $line[0]);
+			array_push($this->devices, $line[1]);
+			array_push($this->users, $line[2]);
 			$i++;
 		}
 
@@ -52,12 +57,26 @@ class DeviceTable {
 	 * @throws DTException if failed to open file
 	 */
 	public function write($filepath) {
-		$fh = fopen($filepath, "w");
+		$fh = fopen($filepath, 'w');
 		if (!$fh) {
-			throw new DTException("failed to open " . realpath($filepath));
+			throw new DTException('failed to open ' . realpath($filepath));
+		}
+		$ipwid = 15; // ip column width
+		$devwid = 15; // devices column width
+		$userwid = 15; // users column width
+		for ($i = 0; $i < count($this->users); $i++) {
+			if (strlen($this->ips[$i]) > $ipwid) {
+				$ipwid = strlen($this->ips[$i]);
+			}
+			if (strlen($this->devices[$i]) > $devwid) {
+				$devwid = strlen($this->devices[$i]);
+			}
+			if (strlen($this->users[$i]) > $userwid) {
+				$userwid = strlen($this->users[$i]);
+			}
 		}
 		for ($i = 0; $i < count($this->users); $i++) {
-			fputcsv($fh, array($this->users[$i], $this->devices[$i], $this->ips[$i]), " ");
+			fprintf($fh, '%-' . $ipwid . 's %-' . $devwid . 's %-' . $userwid . 's' . PHP_EOL, $this->ips[$i], $this->devices[$i], $this->users[$i]);
 		}
 		fclose($fh);
 	}
@@ -85,33 +104,30 @@ class DeviceTable {
 	 */
 	public function delete($ind) {
 		if ($ind < 0 || $ind >= count($this->users)) {
-			throw DTException("delete failed. invalid index: " . $ind);
+			throw DTException('delete failed. invalid index: ' . $ind);
 		}
-		array_splice($this->users, $ind, 1);
-		array_splice($this->devices, $ind, 1);
 		array_splice($this->ips, $ind, 1);
+		array_splice($this->devices, $ind, 1);
+		array_splice($this->users, $ind, 1);
 	}
 
 	/**
-	 * get number of devices of user
-	 * @param string $user username
+	 * get number of devices
+	 * @param string|null $user username
 	 * @return int
 	 */
-	public function countDevices($user) {
-		$n = 0;
-		for ($i = 0; $i < count($this->users); $i++) {
-			if ($this->users[$i] === $user) {
-				$n++;
-			}
+	public function count($user = null) {
+		if (is_null($user)) {
+			return count($this->ips);
+		} else {
+			return (count(array_keys($this->users, $user)));
 		}
-
-		return $n;
 	}
 
 	/**
 	 * get devices and ips of user
 	 * @param string $user username
-	 * @return array contains "device"=>"ip" entries
+	 * @return array contains 'device'=>'ip' entries
 	 */
 	public function getDevices($user) {
 		$devices = array();
@@ -123,19 +139,19 @@ class DeviceTable {
 			}
 		}
 
-		return array("devices" => $devices, "ips" => $ips);
+		return array('devices' => $devices, 'ips' => $ips);
 	}
 
 	/**
 	 * add device to the table
-	 * @param string $user username
-	 * @param string $device device name
 	 * @param string $ip ip adress
+	 * @param string $device device name
+	 * @param string $user username
 	 */
-	public function add($user, $device, $ip) {
-		array_push($this->users, $user);
-		array_push($this->devices, $device);
+	public function add($ip, $device, $user) {
 		array_push($this->ips, $ip);
+		array_push($this->devices, $device);
+		array_push($this->users, $user);
 	}
 
 	/**
@@ -146,7 +162,7 @@ class DeviceTable {
 	 */
 	public function getIp($ind) {
 		if ($ind < 0 || $ind >= count($this->users)) {
-			throw DTException("getIp failed. invalid index: " . $ind);
+			throw DTException('getIp failed. invalid index: ' . $ind);
 		}
 
 		return $this->ips[$ind];
@@ -160,18 +176,18 @@ class DeviceTable {
 	 */
 	public function setIp($ind, $ip) {
 		if ($ind < 0 || $ind >= count($this->users)) {
-			throw DTException("setIp failed. invalid index: " . $ind);
+			throw DTException('setIp failed. invalid index: ' . $ind);
 		}
 		$this->ips[$ind] = $ip;
 	}
 
-    /**
-     * get the unique ip addresses in the table
-     * @return array containing unique ip addresses
-     */
-    public function getUniqueIps() {
-        return array_unique($this->ips);
-    }
+	/**
+	 * get the unique ip addresses in the table
+	 * @return array containing unique ip addresses
+	 */
+	public function getIps() {
+		return $this->ips;
+	}
 }
 
 /**
@@ -182,7 +198,7 @@ class DTException extends \Exception {
 	 * @inheritDoc
 	 */
 	public function __construct($message, $code = 0, \Exception $previous = null) {
-		parent::__construct("DeviceTable exception: " . $message, $code, $previous);
+		parent::__construct('DeviceTable exception: ' . $message, $code, $previous);
 	}
 }
 

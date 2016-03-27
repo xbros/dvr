@@ -7,8 +7,18 @@ Install
 1. Placer les fichiers dans le sous-répertoire `nic` du DocumentRoot.
     ex: `~/public_html/nic`
 2. Editer le fichier de config `DVR/config.php`
-3. Tester l'url `https://server.domain.fr/nic/update`
-4. Si nécessaire, ajouter des utilisateurs dans le fichier passwords
+3. Initialiser
+	```
+	DVR/dvr init
+	```
+4. Ajouter paires user:passwd 
+	```
+	DVR/dvr passwd -a --auth=user:passwd
+	```
+5. mettre en place cron d'actualisation des routes
+	```
+	0 * * * * /path/to/DVR/dvr route
+	```
 
 Update API
 ==============
@@ -18,18 +28,18 @@ Protocole [dyndns2](https://help.dyn.com/remote-access-api/perform-update/)
 https://username:password@server.domain.fr/nic/update?hostname=devicename&myip=1.2.3.4
 ```
 - `username:password` = nom utilisateur et mot de passe sur serveur
-- `hostname` = nom du device. minimum 3 caractères alphanumeriques ou [_-.] commencant par uen lettre ex: samsung-galaxy
+- `hostname` = nom du device. minimum 3 caractères alphanumeriques ou [_.-] commencant par une lettre ex: samsung-galaxy
 - `myip` = ip publique (optionnel). si omise ou invalide, l'ip est déterminée par le serveur.
 - `offline` = `YES` ou `NOCHG` (optionnel). supprime le device de la table
 
 [Return code](https://help.dyn.com/remote-access-api/return-codes/):
 - affiché dans body
 
-Devices API
+List API
 ==============
 Affiche les devices et ip de l'utlisateur
 ```
-https://username:password@server.domain.fr/nic/devices
+https://username:password@server.domain.fr/nic/list
 ```
 
 Serveur
@@ -47,7 +57,7 @@ user passwd
 - une ligne par device
 
 ```
-user device ip
+ip device user
 ```
 
 ### script php
@@ -63,13 +73,6 @@ user device ip
 ```
 ip user [time] script "message"
 ```
-
-### script de config des routes [papa]
-- fichier bash `dvr.sh`
-- droits root
-- cron ttes les 1 min
-- lit la base de données et met en place les routes vpn
-- gere les conflits. ex: 2 devices sur meme ip
 
 Client
 =======

@@ -1,0 +1,24 @@
+#!/bin/bash
+
+DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+
+case $1 in 
+	update)
+		php $DIR/dvr_update.php $2 $3 $4 $5
+		;;
+	list)
+		php $DIR/dvr_list.php $2 $3 $4 $5
+		;;
+	passwd)
+		php $DIR/dvr_passwd.php $2 $3 $4 $5
+		;;
+	init)
+		php $DIR/dvr_init.php $2 $3 $4 $5
+		;;
+	route)
+		php $DIR/dvr_route.php $2 $3 $4 $5
+		;;
+	*)
+		echo $"usage: dvr {update|list|passwd|init|route}"
+		exit 1
+esac
