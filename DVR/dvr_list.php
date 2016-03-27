@@ -11,7 +11,11 @@ define('DVR\USAGE', 'usage: dvr list --auth=<user>:<pw>' . PHP_EOL);
 
 try {
 	$dvr = new App();
-	$dvr->printDevices(PHP_EOL);
+	if (php_sapi_name() == 'cli') {
+		$dvr->printDevices(PHP_EOL);
+	} else {
+		$dvr->printDevices();
+	}
 } catch (RCException $e) {
 	returnCode($e->getReturnCode());
 	log($e->getMessage());
