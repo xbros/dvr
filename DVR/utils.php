@@ -9,7 +9,7 @@ namespace DVR;
  * @return bool true if created. false otherwise
  * @throws Exception if failed to create dir or file
  */
-function createFile($path, $mode = CREATE_MODE) {
+function createFile($path, $mode = CREATE_FILE_MODE, $mode_dir = CREATE_DIR_MODE) {
 	if (!file_exists($path)) {
 		$dir = dirname($path);
 		if (!file_exists($dir)) {
@@ -17,7 +17,7 @@ function createFile($path, $mode = CREATE_MODE) {
 			if (!mkdir($dir)) {
 				throw new \Exception('failed to create dir: ' . $dir);
 			}
-			chmod($dir, $mode);
+			chmod($dir, $mode_dir);
 		}
 		// create file
 		if (!touch($path)) {
@@ -135,7 +135,16 @@ function getRouteIps() {
 }
 
 function getGateway() {
-	return trim(system('route -n | grep \'UG[ \t]\' | grep eth0 | grep \'^0\.0\.0\.0\' | awk \'{print $2}\''));
+	return trim(exec('route -n | grep \'UG[ \t]\' | grep eth0 | grep \'^0\.0\.0\.0\' | awk \'{print $2}\''));
+}
+
+function getMyIp($url = MYIP_URL) {
+	// $curl = curl_init($url);
+	// curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+	// $myip = curl_exec($curl);
+	// curl_close($curl);
+	// return $myip;
+	return trim(exec('curl -s ' . MYIP_URL));
 }
 
 ?>

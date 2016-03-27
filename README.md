@@ -17,7 +17,7 @@ Install
 	```
 5. mettre en place cron d'actualisation des routes
 	```
-	0 * * * * /path/to/DVR/dvr route
+	* * * * * /path/to/DVR/dvr route
 	```
 
 Update API

@@ -87,6 +87,9 @@ class App {
 			// find device
 			$ind = $table->find($_SERVER['PHP_AUTH_USER'], $this->device);
 
+			// get forbidden ips
+			$noadd = file(CONFIG_NOADD_PATH, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
+
 			if ($ind === false) {
 				// device not found
 				if ($this->offline === 'YES') {
@@ -98,6 +101,9 @@ class App {
 				} elseif ($table->count($_SERVER['PHP_AUTH_USER']) >= MAX_DEVICES) {
 					log('ignored add device: ' . $this->device . '. max number of devices reached: ' . MAX_DEVICES);
 					returnCode('numhost');
+				} elseif ($noadd !== false && in_array($this->ip, $noadd)) {
+					log('ignored add device: ' . $this->device . '. ip forbidden');
+					returnCode('nochg forbidden ip');
 				} else {
 					// add device
 					$table->add($this->ip, $this->device, $_SERVER['PHP_AUTH_USER']);
@@ -115,6 +121,9 @@ class App {
 					if ($table->getIp($ind) === $this->ip) {
 						log('ignored change device: ' . $this->device . ' ' . $this->ip);
 						returnCode('nochg ' . $this->ip);
+					} elseif ($noadd !== false && in_array($this->ip, $noadd)) {
+						log('ignored change device: ' . $this->device . '. ip forbidden');
+						returnCode('nochg forbidden ip');
 					} else {
 						// change ip
 						$table->setIp($ind, $this->ip);

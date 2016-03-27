@@ -12,13 +12,22 @@ try {
 	}
 
 	// create sys config file if necessary
-	if (createFile(CONFIG_SYS_PATH)) {
-		rclog('created config file: ' . realpath(CONFIG_SYS_PATH));
+	if (createFile(CONFIG_NODEL_PATH)) {
+		rclog('created config file: ' . realpath(CONFIG_NODEL_PATH));
 	}
 
 	// initialize sys config file with route ips
-	file_put_contents(CONFIG_SYS_PATH, implode(PHP_EOL, getRouteIps()));
-	rclog('initialized config file: ' . realpath(CONFIG_SYS_PATH));
+	file_put_contents(CONFIG_NODEL_PATH, implode(PHP_EOL, getRouteIps()));
+	rclog('initialized config file: ' . realpath(CONFIG_NODEL_PATH));
+
+	// create sys config file if necessary
+	if (createFile(CONFIG_NOADD_PATH)) {
+		rclog('created config file: ' . realpath(CONFIG_NOADD_PATH));
+	}
+
+	// initialize sys config file with route ips
+	file_put_contents(CONFIG_NOADD_PATH, getMyIp(MYIP_URL));
+	rclog('initialized config file: ' . realpath(CONFIG_NOADD_PATH));
 
 	// create passwords file if necessary
 	if (!empty(PASSWD_PATH) && createFile(PASSWD_PATH)) {
