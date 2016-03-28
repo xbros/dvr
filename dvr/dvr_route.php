@@ -19,7 +19,7 @@ try {
 	// get unique ips
 	$table = new DeviceTable(CONF_PATH);
 	$nodelIps = file(CONF_NODEL_PATH, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
-	if ($nodelIps === false)
+	if ($nodelIps === false) {
 		throw new \Exception('failed to open file: ' . CONF_NODEL_PATH);
 	}
 	$ips = array_unique(array_merge($table->getIps(), $nodelIps));
