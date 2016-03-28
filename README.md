@@ -35,7 +35,7 @@ Install
 	* * * * * /path/to/dvr/dvr route
 	```
 
-7. mettre en place initialisation automatique (`/path/to/dvr/dvr init`) après démarrage du VPN
+7. mettre en place initialisation automatique (`dvr init`) après démarrage du VPN
 
 Update API
 ==============
