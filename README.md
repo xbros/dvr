@@ -35,7 +35,11 @@ Install
 	* * * * * /path/to/dvr/dvr route
 	```
 
-7. mettre en place initialisation automatique (`dvr init`) après démarrage du VPN
+7. mettre en place initialisation automatique (`dvr init`) après démarrage du VPN. Exemple avec crontab :
+
+	```
+	@reboot rm dvr.no*.conf; sleep 60; /path/to/dvr/dvr init
+	```
 
 Update API
 ==============
