@@ -1,4 +1,5 @@
 
+Options FollowSymLinks
 RewriteEngine On
 
 # workaround for php as a fcgi (phpinfo - Server API: CGI/FastCGI)
@@ -9,7 +10,7 @@ RewriteRule .* - [E=HTTP_AUTHORIZATION:%{HTTP:Authorization}]
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteRule ^([^\.]+)$ $1.php [NC,L]
 
-# Authetication
+# Authentication
 AuthName "Restricted Area"
 AuthType Basic
 AuthUserFile "/home/xbros/public_html/nic/.dvr/.htpasswd"

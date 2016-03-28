@@ -4,26 +4,43 @@ namespace dvr;
 
 /**
  * create file and folder if necessary
- * @param string $path path to the file
+ * @param string $filepath path to the file
  * @param int $mode octal notation permissions. ex: 0774
  * @return bool true if created. false otherwise
  * @throws Exception if failed to create dir or file
  */
-function createFile($path, $mode = CREATE_FILE_MODE, $mode_dir = CREATE_DIR_MODE) {
-	if (!file_exists($path)) {
-		$dir = dirname($path);
+function createFile($filepath, $mode = CREATE_FILE_MODE, $modeDir = CREATE_DIR_MODE, 
+	$owner = CREATE_OWNER, $group = CREATE_GROUP) {
+	if (!file_exists($filepath)) {
+		$dir = dirname($filepath);
 		if (!file_exists($dir)) {
 			// create dir
 			if (!mkdir($dir)) {
 				throw new \Exception('failed to create dir: ' . $dir);
 			}
-			chmod($dir, $mode_dir);
+			if (!chmod($dir, $modeDir)) {
+				throw new \Exception('failed to change mode of dir: ' . $dir);
+			}
+			if (!empty($owner) && !chown($dir, $owner)) {
+				throw new \Exception('failed to change owner of dir: ' . $dir);
+			}
+			if (!empty($group) && !chgrp($dir, $group)) {
+				throw new \Exception('failed to change group of dir: ' . $dir);
+			}
 		}
 		// create file
-		if (!touch($path)) {
-			throw new \Exception('failed to create file: ' . $path);
+		if (!touch($filepath)) {
+			throw new \Exception('failed to create file: ' . $filepath);
 		}
-		chmod($path, $mode);
+		if (!chmod($filepath, $mode)) {
+			throw new \Exception('failed to change mode of file: ' . $filepath);
+		}
+		if (!empty($owner) && !chown($filepath, $owner)) {
+			throw new \Exception('failed to change owner of file: ' . $filepath);
+		}
+		if (!empty($group) && !chgrp($filepath, $group)) {
+			throw new \Exception('failed to change group of file: ' . $filepath);
+		}
 
 		return true;
 	}

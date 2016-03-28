@@ -98,48 +98,52 @@ class App {
 			if ($ind === false) {
 				// device not found
 				if ($this->offline === 'YES') {
-					log('ignored add device: ' . $this->device);
-					returnCode('nochg offline');
+					$message = 'ignored add device: ' . $this->device;
+					$code = 'nochg offline';
 				} elseif ($this->offline === 'NOCHG') {
-					log('ignored add device: ' . $this->device . '. offline=NOCHG');
-					returnCode('nochg offline');
+					$message = 'ignored add device: ' . $this->device . '. offline=NOCHG';
+					$code = 'nochg offline';
 				} elseif ($table->count($_SERVER['PHP_AUTH_USER']) >= MAX_DEVICES) {
-					log('ignored add device: ' . $this->device . '. max number of devices reached: ' . MAX_DEVICES);
-					returnCode('numhost');
+					$message = 'ignored add device: ' . $this->device . '. max number of devices reached: ' . MAX_DEVICES;
+					$code = 'numhost';
 				} elseif ($noadd !== false && in_array($this->ip, $noadd)) {
-					log('ignored add device: ' . $this->device . '. ip forbidden');
-					returnCode('nochg forbidden ip');
+					$message = 'ignored add device: ' . $this->device . '. ip forbidden';
+					$code = 'nochg forbidden ip';
 				} else {
 					// add device
 					$table->add($this->ip, $this->device, $_SERVER['PHP_AUTH_USER']);
-					log('added device: ' . $this->device . ' ' . $this->ip);
-					returnCode('good ' . $this->ip);
+					$message = 'added device: ' . $this->device . ' ' . $this->ip;
+					$code = 'good ' . $this->ip;
 				}
 			} else {
 				// device found
 				if ($this->offline === 'YES') {
 					// delete device
 					$table->delete($ind);
-					log('deleted device: ' . $this->device);
-					returnCode('good deleted ' . $this->device);
+					$message = 'deleted device: ' . $this->device;
+					$code = 'good deleted ' . $this->device;
 				} else {
 					if ($table->getIp($ind) === $this->ip) {
-						log('ignored change device: ' . $this->device . ' ' . $this->ip);
-						returnCode('nochg ' . $this->ip);
+						$message = 'ignored change device: ' . $this->device . ' ' . $this->ip;
+						$code = 'nochg ' . $this->ip;
 					} elseif ($noadd !== false && in_array($this->ip, $noadd)) {
-						log('ignored change device: ' . $this->device . '. ip forbidden');
-						returnCode('nochg forbidden ip');
+						$message = 'ignored change device: ' . $this->device . '. ip forbidden';
+						$code = 'nochg forbidden ip';
 					} else {
 						// change ip
 						$table->setIp($ind, $this->ip);
-						log('changed device: ' . $this->device . ' ' . $this->ip);
-						returnCode('good ' . $this->ip);
+						$message = 'changed device: ' . $this->device . ' ' . $this->ip;
+						$code = 'good ' . $this->ip;
 					}
 				}
 			}
 
 			// write config file
 			$table->write($this->configPath);
+
+			// return code and log message
+			returnCode($code);
+			log($message);
 		} catch (DTException $e) {
 			http_response_code(500); // Internal Server Error
 			throw new RCException($e->getMessage(), '911', $e);

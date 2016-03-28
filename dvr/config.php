@@ -28,6 +28,10 @@ define('dvr\MAX_DEVICES', 20);
 define('dvr\CREATE_FILE_MODE', 0664);
 /** @var int default directory creation mode (0 prefix needed) */
 define('dvr\CREATE_DIR_MODE', 0774);
+/** @var string default owner for file and dir creation. allowed when executed as root only. use '' to not change */
+define('dvr\CREATE_OWNER', '');
+/** @var string default group for file and dir creation. use '' to not change */
+define('dvr\CREATE_GROUP', '');
 /** @var string default url for getting host public ip */
 define('dvr\MYIP_URL', 'ifcfg.me')
 
