@@ -1,6 +1,6 @@
 <?php
 
-namespace DVR;
+namespace dvr;
 
 /**
  * create file and folder if necessary
@@ -101,11 +101,11 @@ function authenticate($passwdPath = PASSWD_PATH) {
 
 	// check username
 	if (empty($_SERVER['PHP_AUTH_USER'])) {
-		throw new BadauthException('authentication missing');
+		throw new AuthException('authentication missing');
 	}
 	$user = $_SERVER['PHP_AUTH_USER'];
 	if (!empty($passwdPath) && !$passwds->has($user)) {
-		throw new BadauthException('unknown username: ' . $user);
+		throw new AuthException('unknown username: ' . $user);
 	}
 
 	// check password
@@ -115,7 +115,7 @@ function authenticate($passwdPath = PASSWD_PATH) {
 			$pw = $_SERVER['PHP_AUTH_PW'];
 		}
 		if (!$passwds->verify($user, $pw)) {
-			throw new BadauthException('invalid password');
+			throw new AuthException('invalid password');
 		}
 	}
 }
@@ -123,28 +123,34 @@ function authenticate($passwdPath = PASSWD_PATH) {
 /**
  * exception thrown by authentication
  */
-class BadauthException extends \Exception {
+class AuthException extends \Exception {
+}
+
+function execCheck($command, &$out=null, &$ret=null) {
+	$last = exec($command, $out, $ret);
+	if ($last === false || $ret !== 0) {
+		throw new \Exception('command failed: ' . $command);
+	}
+	return $last;
 }
 
 function getRouteIps() {
 	// read route
-	$ips = array();
-	exec('route -n | grep \'^[0-9]\' | awk \'{print $1}\'', $ips);
-	$ips = filter_var_array($ips, FILTER_VALIDATE_IP);
+	$command = 'route -n | grep \'^[0-9]\' | awk \'{print $1}\'';
+	$out = array();
+	execCheck($command, $out);
+	$ips = filter_var_array($out, FILTER_VALIDATE_IP);
 	return array_values($ips);
 }
 
 function getGateway() {
-	return trim(exec('route -n | grep \'UG[ \t]\' | grep eth0 | grep \'^0\.0\.0\.0\' | awk \'{print $2}\''));
+	$command = 'route -n | grep \'UG[ \t]\' | grep eth0 | grep \'^0\.0\.0\.0\' | awk \'{print $2}\'';
+	return trim(filter_var(execCheck($command), FILTER_VALIDATE_IP));
 }
 
 function getMyIp($url = MYIP_URL) {
-	// $curl = curl_init($url);
-	// curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
-	// $myip = curl_exec($curl);
-	// curl_close($curl);
-	// return $myip;
-	return trim(exec('curl -s ' . MYIP_URL));
+	$command = 'curl -s ' . $url;
+	return trim(filter_var(execCheck($command), FILTER_VALIDATE_IP));
 }
 
 ?>

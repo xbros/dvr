@@ -6,7 +6,7 @@
 
 <body>
     <?php
-    include('DVR/dvr_update.php');
+    include('dvr/dvr_update.php');
     ?>
 </body>
 </html>

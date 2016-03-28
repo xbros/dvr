@@ -1,11 +1,11 @@
 <?php
 
-namespace DVR;
+namespace dvr;
 require realpath(dirname(__FILE__)) . '/config.php';
 require realpath(dirname(__FILE__)) . '/utils.php';
 require realpath(dirname(__FILE__)) . '/PasswdTable.php';
 
-define('DVR\USAGE', 'usage: dvr passwd <command> --auth=<user>:<pw>' . PHP_EOL
+define('dvr\USAGE', 'usage: dvr passwd <command> --auth=<user>:<pw>' . PHP_EOL
 	. 'commands: -a   add' . PHP_EOL
 	. '          -c   change' . PHP_EOL
 	. '          -v   verify' . PHP_EOL

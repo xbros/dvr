@@ -1,9 +1,8 @@
 <?php
 
-namespace DVR;
+namespace dvr;
 require realpath(dirname(__FILE__)) . '/config.php';
 require realpath(dirname(__FILE__)) . '/utils.php';
-require realpath(dirname(__FILE__)) . '/DeviceTable.php';
 
 try {
 	// create config file if necessary

@@ -1,6 +1,6 @@
 <?php
 
-namespace DVR;
+namespace dvr;
 
 class PasswdTable {
 	/** @var array contains 'user'=>'passwd' entries */
@@ -96,9 +96,8 @@ class PasswdTable {
 		if (!$fh) {
 			throw new \Exception('failed to open file: ' . $filepath);
 		}
-		$users = array_keys($this->passwds);
-		for ($i = 0; $i < count($users); $i++) {
-			fputs($fh, $users[$i] . ':' . $this->passwds[$users[$i]] . PHP_EOL);
+		foreach ($this->passwds as $user=>$pw) {
+			fputs($fh, $user . ':' . $pw . PHP_EOL);
 		}
 		fclose($fh);
 	}

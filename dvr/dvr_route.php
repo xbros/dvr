@@ -1,11 +1,11 @@
 <?php
 
-namespace DVR;
+namespace dvr;
 require realpath(dirname(__FILE__)) . '/config.php';
 require realpath(dirname(__FILE__)) . '/utils.php';
 require realpath(dirname(__FILE__)) . '/DeviceTable.php';
 
-define('DVR\USAGE', 'usage: dvr route [-n]' . PHP_EOL
+define('dvr\USAGE', 'usage: dvr route [-n]' . PHP_EOL
 	. 'options: -n   echo commands without running them' . PHP_EOL);
 
 try {
@@ -19,7 +19,7 @@ try {
 	// get unique ips
 	$table = new DeviceTable(CONFIG_PATH);
 	$nodelIps = file(CONFIG_NODEL_PATH, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
-	$ips = array_values(array_unique(array_merge($table->getIps(), $nodelIps)));
+	$ips = array_unique(array_merge($table->getIps(), $nodelIps));
 
 	// get route ips
 	$routeIps = getRouteIps();
@@ -31,8 +31,7 @@ try {
 	}
 
 	// add missing routes
-	for ($i = 0; $i < count($ips); $i++) {
-		$ip = $ips[$i];
+	foreach ($ips as $ip) {
 		if (!in_array($ip, $routeIps)) {
 			$command = 'route add -host ' . $ip . ' gw ' . $gw . ' dev eth0';
 			if (isset($opts['n'])) {
@@ -48,8 +47,7 @@ try {
 	}
 
 	// delete extra routes
-	for ($i = 0; $i < count($routeIps); $i++) {
-		$ip = $routeIps[$i];
+	foreach ($routeIps as $ip) {
 		if (!in_array($ip, $ips)) {
 			$command = 'route del -host ' . $ip . ' gw ' . $gw . ' dev eth0';
 			if (isset($opts['n'])) {

@@ -1,6 +1,6 @@
 <?php
 
-namespace DVR;
+namespace dvr;
 
 /**
  * table of users devices ips
@@ -61,10 +61,11 @@ class DeviceTable {
 		if (!$fh) {
 			throw new DTException('failed to open ' . realpath($filepath));
 		}
+		// determine columns width
 		$ipwid = 15; // ip column width
 		$devwid = 15; // devices column width
 		$userwid = 15; // users column width
-		for ($i = 0; $i < count($this->users); $i++) {
+		foreach (array_keys($this->users) as $i) {
 			if (strlen($this->ips[$i]) > $ipwid) {
 				$ipwid = strlen($this->ips[$i]);
 			}
@@ -75,8 +76,10 @@ class DeviceTable {
 				$userwid = strlen($this->users[$i]);
 			}
 		}
-		for ($i = 0; $i < count($this->users); $i++) {
-			fprintf($fh, '%-' . $ipwid . 's %-' . $devwid . 's %-' . $userwid . 's' . PHP_EOL, $this->ips[$i], $this->devices[$i], $this->users[$i]);
+		// print lines
+		$format = '%-' . $ipwid . 's %-' . $devwid . 's %-' . $userwid . 's' . PHP_EOL;
+		foreach (array_keys($this->users) as $i) {
+			fprintf($fh, $format, $this->ips[$i], $this->devices[$i], $this->users[$i]);
 		}
 		fclose($fh);
 	}
@@ -87,7 +90,7 @@ class DeviceTable {
 	 */
 	public function find($user, $device) {
 		$ind = false;
-		for ($i = 0; $i < count($this->users); $i++) {
+		foreach (array_keys($this->users) as $i) {
 			if ($this->users[$i] === $user && $this->devices[$i] === $device) {
 				$ind = $i;
 				break;
@@ -129,17 +132,15 @@ class DeviceTable {
 	 * @param string $user username
 	 * @return array contains 'device'=>'ip' entries
 	 */
-	public function getDevices($user) {
-		$devices = array();
+	public function getUserIps($user = null) {
 		$ips = array();
-		for ($i = 0; $i < count($this->users); $i++) {
+		foreach (array_keys($this->users) as $i) {
 			if ($this->users[$i] === $user) {
-				array_push($devices, $this->devices[$i]);
-				array_push($ips, $this->ips[$i]);
+				$ips[$this->devices[$i]] = $this->ips[$i];
 			}
 		}
 
-		return array('devices' => $devices, 'ips' => $ips);
+		return $ips;
 	}
 
 	/**
@@ -182,8 +183,8 @@ class DeviceTable {
 	}
 
 	/**
-	 * get the unique ip addresses in the table
-	 * @return array containing unique ip addresses
+	 * get the ip addresses in the table
+	 * @return array containing ip addresses
 	 */
 	public function getIps() {
 		return $this->ips;

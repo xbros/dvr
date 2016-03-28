@@ -1,6 +1,6 @@
 <?php
 
-namespace DVR;
+namespace dvr;
 
 /**
  * Dynamic VPN routes application class
@@ -25,7 +25,7 @@ class App {
 	private $offline = null;
 
 	/**
-	 * initialize DVR and check authentication
+	 * initialize dvr and check authentication
 	 * @param string $configPath path to config file
 	 * @param string $passwdPath path to passwords file
 	 */
@@ -35,7 +35,7 @@ class App {
 		// authenticate user if $passwdPath not empty
 		try {
 			authenticate($passwdPath);
-		} catch (BadauthException $e) {
+		} catch (AuthException $e) {
 			if (php_sapi_name() !== 'cli') {
 				header('WWW-Authenticate: Basic realm="Authentication Required"');
 			}
@@ -56,11 +56,11 @@ class App {
 			$table = new DeviceTable($this->configPath);
 
 			// get devices
-			$devices = $table->getDevices($_SERVER['PHP_AUTH_USER']);
+			$ips = $table->getUserIps($_SERVER['PHP_AUTH_USER']);
 
 			// print devices
-			for ($i = 0; $i < count($devices['devices']); $i++) {
-				echo $devices['devices'][$i] . ' ' . $devices['ips'][$i] . $sep;
+			foreach ($ips as $device=>$ip) {
+				echo $ip . ' ' . $device . $sep;
 			}
 
 			log('printed user devices');

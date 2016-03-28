@@ -6,18 +6,18 @@ Install
 ========
 1. Placer les fichiers dans le sous-répertoire `nic` du DocumentRoot.
     ex: `~/public_html/nic`
-2. Editer le fichier de config `DVR/config.php`
+2. Editer le fichier de config `dvr/config.php`
 3. Initialiser
 	```
-	DVR/dvr init
+	dvr/dvr init
 	```
 4. Ajouter paires user:passwd 
 	```
-	DVR/dvr passwd -a --auth=user:passwd
+	dvr/dvr passwd -a --auth=user:passwd
 	```
 5. mettre en place cron d'actualisation des routes
 	```
-	* * * * * /path/to/DVR/dvr route
+	* * * * * /path/to/dvr/dvr route
 	```
 
 Update API
