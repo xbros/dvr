@@ -21,8 +21,8 @@ Install
 	htpasswd -c /path/to/.htpasswd user1
 	htpasswd  /path/to/.htpasswd user2
 	```
-	
-5. modifier .htaccess
+
+5. modifier .htaccess avec le chemin absolu vers le fichier passwd
 	
 	```
 	AuthUserFile "/path/to/.htpasswd"
