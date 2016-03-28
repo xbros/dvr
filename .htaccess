@@ -1,5 +1,4 @@
 
-Options FollowSymLinks
 RewriteEngine On
 
 # workaround for php as a fcgi (phpinfo - Server API: CGI/FastCGI)
