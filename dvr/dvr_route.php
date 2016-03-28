@@ -17,8 +17,8 @@ try {
 	}
 
 	// get unique ips
-	$table = new DeviceTable(CONFIG_PATH);
-	$nodelIps = file(CONFIG_NODEL_PATH, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
+	$table = new DeviceTable(CONF_PATH);
+	$nodelIps = file(CONF_NODEL_PATH, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
 	$ips = array_unique(array_merge($table->getIps(), $nodelIps));
 
 	// get route ips

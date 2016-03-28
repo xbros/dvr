@@ -27,20 +27,25 @@ class App {
 	/**
 	 * initialize dvr and check authentication
 	 * @param string $configPath path to config file
-	 * @param string $passwdPath path to passwords file
 	 */
-	public function __construct($configPath = CONFIG_PATH,
-		$passwdPath = PASSWD_PATH) {
+	public function __construct($configPath = CONF_PATH) {
 
-		// authenticate user if $passwdPath not empty
-		try {
-			authenticate($passwdPath);
-		} catch (AuthException $e) {
+		// authenticate user
+		if (php_sapi_name() === 'cli') {
+			$_SERVER['REMOTE_ADDR'] = '127.0.0.1'; // localhost
+			$params = getopt('', array('user:'));
+			if (isset($params['user'])) {
+				$_SERVER['PHP_AUTH_USER'] = $params['user'];
+			}
+		}
+
+		// check username
+		if (empty($_SERVER['PHP_AUTH_USER'])) {
 			if (php_sapi_name() !== 'cli') {
 				header('WWW-Authenticate: Basic realm="Authentication Required"');
 			}
 			http_response_code(401); // Unauthorized
-			throw new RCException('unauthorized. ' . $e->getMessage(), 'badauth', $e);
+			throw new RCException('unauthorized. authentication missing', 'badauth');
 		}
 
 		$this->configPath = $configPath;
@@ -88,7 +93,7 @@ class App {
 			$ind = $table->find($_SERVER['PHP_AUTH_USER'], $this->device);
 
 			// get forbidden ips
-			$noadd = file(CONFIG_NOADD_PATH, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
+			$noadd = file(CONF_NOADD_PATH, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
 
 			if ($ind === false) {
 				// device not found

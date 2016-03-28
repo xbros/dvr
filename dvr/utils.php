@@ -79,53 +79,6 @@ function rclog($message) {
 	log($message);
 }
 
-/**
- * check authentication
- * @param string $passwdPath path to passwords file. ignore if empty
- */
-function authenticate($passwdPath = PASSWD_PATH) {
-	// php executed from command line
-	if (php_sapi_name() === 'cli') {
-		$_SERVER['REMOTE_ADDR'] = '127.0.0.1'; // localhost
-		$params = getopt('', array('auth:'));
-		if (isset($params['auth'])) {
-			list($user, $pw) = PasswdTable::parse($params['auth']);
-			$_SERVER['PHP_AUTH_USER'] = $user;
-			$_SERVER['PHP_AUTH_PW'] = $pw;
-		}
-	}
-
-	if (!empty($passwdPath)) {
-		$passwds = new PasswdTable($passwdPath);
-	}
-
-	// check username
-	if (empty($_SERVER['PHP_AUTH_USER'])) {
-		throw new AuthException('authentication missing');
-	}
-	$user = $_SERVER['PHP_AUTH_USER'];
-	if (!empty($passwdPath) && !$passwds->has($user)) {
-		throw new AuthException('unknown username: ' . $user);
-	}
-
-	// check password
-	if (!empty($passwdPath)) {
-		$pw = '';
-		if (isset($_SERVER['PHP_AUTH_PW'])) {
-			$pw = $_SERVER['PHP_AUTH_PW'];
-		}
-		if (!$passwds->verify($user, $pw)) {
-			throw new AuthException('invalid password');
-		}
-	}
-}
-
-/**
- * exception thrown by authentication
- */
-class AuthException extends \Exception {
-}
-
 function execCheck($command, &$out=null, &$ret=null) {
 	$last = exec($command, $out, $ret);
 	if ($last === false || $ret !== 0) {

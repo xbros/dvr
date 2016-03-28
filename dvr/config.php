@@ -15,13 +15,11 @@ if (DEBUG) {
 /*============== EDIT BELOW =================================*/
 define('dvr\ROOT_DIR', dirname(__DIR__) . '/.dvr'); // "../.dvr"
 /** @var string default absolute path to config file */
-define('dvr\CONFIG_PATH', ROOT_DIR . '/dvr.conf');
+define('dvr\CONF_PATH', ROOT_DIR . '/dvr.conf');
 /** @var string default absolute path to system config file */
-define('dvr\CONFIG_NODEL_PATH', ROOT_DIR . '/dvr.nodel.conf');
+define('dvr\CONF_NODEL_PATH', ROOT_DIR . '/dvr.nodel.conf');
 /** @var string default absolute path to system config file */
-define('dvr\CONFIG_NOADD_PATH', ROOT_DIR . '/dvr.noadd.conf');
-/** @var string default absolute path to passwords file. use '' to disable */
-define('dvr\PASSWD_PATH', ROOT_DIR . '/dvr.passwd');
+define('dvr\CONF_NOADD_PATH', ROOT_DIR . '/dvr.noadd.conf');
 /** @var string default absolute path to log file */
 define('dvr\LOG_PATH', ROOT_DIR . '/dvr.log');
 /** @var int default max number of devices per user in the table */
@@ -30,7 +28,7 @@ define('dvr\MAX_DEVICES', 20);
 define('dvr\CREATE_FILE_MODE', 0664);
 /** @var int default directory creation mode (0 prefix needed) */
 define('dvr\CREATE_DIR_MODE', 0774);
-
+/** @var string default url for getting host public ip */
 define('dvr\MYIP_URL', 'ifcfg.me')
 
 ?>

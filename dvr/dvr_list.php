@@ -3,11 +3,10 @@
 namespace dvr;
 require realpath(dirname(__FILE__)) . '/config.php';
 require realpath(dirname(__FILE__)) . '/utils.php';
-require realpath(dirname(__FILE__)) . '/PasswdTable.php';
 require realpath(dirname(__FILE__)) . '/DeviceTable.php';
 require realpath(dirname(__FILE__)) . '/App.php';
 
-define('dvr\USAGE', 'usage: dvr list --auth=<user>:<pw>' . PHP_EOL);
+define('dvr\USAGE', 'usage: dvr list --user=<user>' . PHP_EOL);
 
 try {
 	$dvr = new App();
