@@ -8,6 +8,7 @@ Install
     ex: `/var/www/nic`
 2. Editer le fichier de config `dvr/config.php`
 3. Initialiser
+
 		```
 		/path/to/dvr/dvr init
 		```
