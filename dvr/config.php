@@ -2,7 +2,7 @@
 
 namespace dvr;
 
-const VERSION = '0.1';
+const VERSION = '1.0';
 const DEBUG = false;
 
 if (DEBUG) {
