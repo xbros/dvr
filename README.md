@@ -8,15 +8,18 @@ Install
     ex: `/var/www/nic`
 2. Editer le fichier de config `dvr/config.php`
 3. Initialiser
-		/path/to/dvr/dvr init
+	
+	```
+	/path/to/dvr/dvr init
+	```
+
 4. Si nécessaire, ajouter paires user:passwd 
-		```
+
 		/path/to/dvr/dvr passwd -a --auth=user:passwd
-		```
+
 5. mettre en place cron d'actualisation des routes
-		```
+
 		* * * * * /path/to/dvr/dvr route
-		```
 
 Update API
 ==============
