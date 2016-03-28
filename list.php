@@ -1,12 +1,4 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-</head>
-
-<body>
-    <?php
-    include('dvr/dvr_list.php');
-    ?>
-</body>
-</html>
+<?php
+header("Content-Type: text/plain");
+include('dvr/dvr_list.php');
+?>

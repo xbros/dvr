@@ -10,11 +10,7 @@ define('dvr\USAGE', 'usage: dvr list --user=<user>' . PHP_EOL);
 
 try {
 	$dvr = new App();
-	if (php_sapi_name() == 'cli') {
-		$dvr->printDevices(PHP_EOL);
-	} else {
-		$dvr->printDevices();
-	}
+	$dvr->printDevices();
 } catch (RCException $e) {
 	returnCode($e->getReturnCode());
 	log($e->getMessage());

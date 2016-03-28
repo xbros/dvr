@@ -55,7 +55,7 @@ class App {
 	 * display devices and ips of authenticated user
 	 * @throws RCException if any error reading config file
 	 */
-	public function printDevices($sep = "<br>\n") {
+	public function printDevices() {
 		try {
 			// read config file
 			$table = new DeviceTable($this->configPath);
@@ -65,7 +65,7 @@ class App {
 
 			// print devices
 			foreach ($ips as $device=>$ip) {
-				echo $ip . ' ' . $device . $sep;
+				echo $ip . ' ' . $device . PHP_EOL;
 			}
 
 			log('printed user devices');
