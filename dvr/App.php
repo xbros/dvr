@@ -93,7 +93,10 @@ class App {
 			$ind = $table->find($_SERVER['PHP_AUTH_USER'], $this->device);
 
 			// get forbidden ips
-			$noadd = file(CONF_NOADD_PATH, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
+			$noaddIps = file(CONF_NOADD_PATH, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
+			if ($noaddIps === false) {
+				throw new \Exception('failed to open file: ' . CONF_NOADD_PATH);
+			}
 
 			if ($ind === false) {
 				// device not found
@@ -106,7 +109,7 @@ class App {
 				} elseif ($table->count($_SERVER['PHP_AUTH_USER']) >= MAX_DEVICES) {
 					$message = 'ignored add device: ' . $this->device . '. max number of devices reached: ' . MAX_DEVICES;
 					$code = 'numhost';
-				} elseif ($noadd !== false && in_array($this->ip, $noadd)) {
+				} elseif (in_array($this->ip, $noaddIps)) {
 					$message = 'ignored add device: ' . $this->device . '. ip forbidden';
 					$code = 'nochg forbidden ip';
 				} else {
@@ -126,7 +129,7 @@ class App {
 					if ($table->getIp($ind) === $this->ip) {
 						$message = 'ignored change device: ' . $this->device . ' ' . $this->ip;
 						$code = 'nochg ' . $this->ip;
-					} elseif ($noadd !== false && in_array($this->ip, $noadd)) {
+					} elseif ($noaddIps !== false && in_array($this->ip, $noaddIps)) {
 						$message = 'ignored change device: ' . $this->device . '. ip forbidden';
 						$code = 'nochg forbidden ip';
 					} else {
