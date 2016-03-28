@@ -12,5 +12,5 @@ RewriteRule ^([^\.]+)$ $1.php [NC,L]
 # Authetication
 AuthName "Restricted Area"
 AuthType Basic
-AuthUserFile "~/public_html/nic/.dvr/.htpasswd"
+AuthUserFile "/home/xbros/public_html/nic/.dvr/.htpasswd"
 Require valid-user
